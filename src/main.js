@@ -4,14 +4,15 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
 import App from './App';
-import VueResource from 'vue-resource'
-import VueClip from 'vue-clip'
-
+import VueResource from 'vue-resource';
+// import moment from 'moment';
+// import VueMoment from 'vue-moment'
 
 import router from './router';
 
-Vue.use(VueClip)
-Vue.use(VueResource)
+// Vue.use(moment);
+// Vue.use(VueMoment);
+Vue.use(VueResource);
 Vue.use(Vuetify);
 Vue.config.productionTip = false;
 

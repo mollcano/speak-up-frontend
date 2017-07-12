@@ -74,6 +74,7 @@ export default {
       items: [
         { title: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
         { title: 'Diary', icon: 'mic', path: '/diary' },
+        { title: 'Goals', icon: 'star', path: '/goals' },
       ],
       mini: false,
       right: null,

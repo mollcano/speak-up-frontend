@@ -2,7 +2,7 @@
   <div class="diary">
     <button id="presentation-btn" type="button" name="button" v-on:click="seen = !seen">Submit a New Presentation</button>
 
-    <v-layout column align-center v-if="seen">
+    <v-layout class="mb-3" column align-center v-if="seen">
       <v-card align-center v-bind:class = "{'audioHide': audioShow}">
         <v-toolbar dark>
           <v-toolbar-title>Upload a .wav audio file</v-toolbar-title>
@@ -28,19 +28,34 @@
         </v-card-actions>
       </v-card>
     </v-layout>
-    <v-expansion-panel expand>
-      <v-expansion-panel-content v-for="item in items" :key="item" v-bind:value="item === 2">
-        <div slot="header">{{ item.title }}<div class="text-xs-center">date | length</div></div>
-        <v-card>
-          <v-card-text class="grey lighten-3">{{ item. length }}</v-card-text>
-        </v-card>
-      </v-expansion-panel-content>
-    </v-expansion-panel>
-    <!-- <form id="hidden" method="POST" action="http://localhost:3000/addAudio">
-      <v-text-field label="Title of Presentation" required></v-text-field>
-      <input type="file" />
-      <button type="submit" name="submit">SUBMIT</button>
-    </form> -->
+    <v-layout row>
+    <v-flex xs12 sm12>
+      <v-card class="mb-5" v-for="item in items" :key="item" v-bind:value="item === 2">
+        <v-card-title class="diary-panels" primary-title>
+          <div>
+            <div class="headline">{{ item.title }}</div>
+            <span class="grey--text"><v-icon dark class="date-icon">date_range</v-icon>
+            {{ item.date }}
+            <v-icon dark class="timer-icon">timer</v-icon>
+            {{ item.length_of_audio }}</span>
+          </div>
+        </v-card-title>
+        <v-card-actions class="ml-2">
+          Analyze this presentation
+          <v-btn icon @click.native="show = !show">
+            <v-icon>{{ show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
+          </v-btn>
+        </v-card-actions>
+        <v-slide-y-transition>
+          <v-card-text v-show="show">
+            clarity: {{ item.confidence }}
+            <br>
+            transcript: {{ item.transcript }}
+          </v-card-text>
+        </v-slide-y-transition>
+      </v-card>
+    </v-flex>
+  </v-layout>
   </div>
 </template>
 
@@ -51,16 +66,26 @@ export default {
   data() {
     return {
       seen: false,
+      show: false,
       audio: {
         title: '',
         file: '',
       },
       error: '',
       items: [
-        {title: 'hello', length: 4},
-        {title: 'no way', length: 7},
+
       ],
     };
+  },
+  created: function() {
+    var self = this
+    this.$http.get('http://localhost:3000/audio')
+    .then(data => {
+      for (var i=0; i<data.body.length; i++)
+      this.items.push(data.body[i])
+
+    })
+    console.log(items[0])
   },
   methods: {
     submit() {
@@ -100,4 +125,15 @@ export default {
 #submit-btn:hover{
   color: #FAFAFA;
 }
+.diary-panels{
+  background-color: #433A3F;
+  color: #FAFAFA;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+}
+.date-icon, .timer-icon{
+  margin-left: 10px;
+  margin-right: 0px;
+}
+
 </style>
