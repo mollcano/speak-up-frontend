@@ -2,7 +2,7 @@
     <div class="hello">
       <v-layout column align-center justify-center class="overlay">
         <div class="text-data">
-          <h1 class="white--text big-title"><img src="../assets/speakup_logo_hor.png" class="speakup"></h1>
+          <h1 class="white--text big-title mb-0"><img src="../assets/speakup_logo_hor.png" class="speakup"></h1>
           <h4 class="white--text subtitle">Build better public speaking skills through actionable data</h4>
           <v-layout row justify-center class="mt-5">
             <v-dialog v-model="signup" persistent>
@@ -107,7 +107,7 @@ export default {
   height: 90vh;*/
 }
 .big-title{
-  margin-top: 3%;
+  margin-top: 12%;
   text-align: center;
 }
 .speakup{
@@ -125,9 +125,9 @@ export default {
   pointer-events: none;
 }
 .text-data{
-  background-color: rgba(0, 0, 0, 0.4);
-  height: 70%;
-  width: 82%;
+  background-color: rgba(0, 0, 0, 0.6);
+  height: 100%;
+  width: 100%;
 }
 .subtitle{
   text-align: center;
