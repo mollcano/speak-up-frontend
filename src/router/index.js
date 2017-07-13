@@ -15,7 +15,7 @@ export default new Router({
       component: Hello,
     },
     {
-      path: '/diary',
+      path: '/diary/:id',
       name: 'Diary',
       component: Diary,
     },

@@ -61,6 +61,7 @@
 
 <script>
 import watson from '../watson/watson';
+import auth from '../auth/auth';
 
 export default {
   data() {
@@ -75,14 +76,20 @@ export default {
       items: [
 
       ],
+      user: {
+
+      },
     };
   },
   created: function() {
     var self = this
-    this.$http.get('http://localhost:3000/audio')
+    console.log(auth.user)
+    this.$http.get('http://localhost:3000/audio/' + auth.user.id)
     .then(data => {
-      for (var i=0; i<data.body.length; i++)
-      this.items.push(data.body[i])
+      console.log("data")
+      for (var i=0; i<data.body.length; i++){
+        this.items.push(data.body[i])
+      }
 
     })
     console.log(items[0])
@@ -134,6 +141,9 @@ export default {
 .date-icon, .timer-icon{
   margin-left: 10px;
   margin-right: 0px;
+}
+.redTranscript{
+  color: red;
 }
 
 </style>

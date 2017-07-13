@@ -1,8 +1,9 @@
 import { router } from '../router';
+import auth from '../auth/auth';
 
 const API_URL = 'http://localhost:3000/';
-const ADD_AUDIO_URL = API_URL + 'addAudio';
-const GET_AUDIO_URL = API_URL + 'audio'
+const ADD_AUDIO_URL = API_URL + 'addAudio/';
+const GET_AUDIO_URL = API_URL + 'audio/';
 
 export default {
   getAudio(context, file){

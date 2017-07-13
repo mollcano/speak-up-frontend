@@ -7,17 +7,19 @@ const SIGNUP_URL = API_URL + 'signup'
 export default {
 
   // User object will let us check authentication status
-  user: {
+  myUser: {
     authenticated: false,
   },
-
+  user:{
+    id: 0,
+  },
   // Send a request to the login URL and save the returned JWT
   login(context, creds, redirect) {
     var self = this
     context.$http.post(LOGIN_URL, creds)
     .then(data => {
-      console.log(data, 'login response data');
-
+      console.log(data.body.id, 'login response data');
+      this.user = {id: data.body.id}
       // localStorage.setItem('access_token', data.access_token)
 
       // self.user.authenticated = true
@@ -25,7 +27,7 @@ export default {
       // Redirect to a specified route
       if (redirect) {
         // context.$router.push('/')
-        routes.go(redirect)
+        router.replace(redirect + data.body.id)
       }
 
     }).catch(err => {
@@ -39,7 +41,7 @@ export default {
       localStorage.setItem('id_token', data.token)
       // localStorage.setItem('access_token', data.access_token)
 
-      this.user.authenticated = true
+      this.myUser.authenticated = true
 
       if (redirect) {
         router.go(redirect)
@@ -54,17 +56,17 @@ export default {
   logout() {
     localStorage.removeItem('token')
     // localStorage.removeItem('access_token')
-    this.user.authenticated = false
+    this.myUser.authenticated = false
   },
 
   checkAuth () {
     var jwt = localStorage.getItem('id_token')
     if (jwt) {
 
-      this.user.authenticated = true
+      this.myUser.authenticated = true
 
     } else {
-      this.user.authenticated = false
+      this.myUser.authenticated = false
     }
   },
 
