@@ -17,6 +17,12 @@ Vue.use(Vuetify);
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
+// new Vue({
+//   el: '#splash',
+//   router,
+//   template: '<splash/>',
+//   components: { Hello },
+// });
 new Vue({
   el: '#app',
   router,
