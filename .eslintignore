@@ -6,3 +6,4 @@ src/watson/watson.js
 src/components/diary.vue
 src/components/Hello.vue
 src/auth/*.js
+src/highlight/highlight.js

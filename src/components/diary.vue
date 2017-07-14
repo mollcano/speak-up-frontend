@@ -47,8 +47,8 @@
           </v-btn>
         </v-card-actions>
         <v-slide-y-transition>
-          <v-card-text v-show="show">
-            clarity: {{ item.confidence }}
+          <v-card-text v-show="show" class="hightlighter">
+            <v-icon dark>textsms</v-icon>clarity: {{ item.confidence }}
             <br>
             transcript: {{ item.transcript }}
           </v-card-text>
@@ -99,6 +99,7 @@ export default {
       const audio = {
         title: this.audio.title,
         file: this.audio.file,
+        user_id: auth.user.id,
       };
       watson.addAudio(this, audio);
     },
