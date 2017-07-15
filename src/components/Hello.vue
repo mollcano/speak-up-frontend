@@ -23,6 +23,7 @@
                     required></v-text-field>
                   <v-text-field
                     label="password"
+                    type="password"
                     class="mt-1"
                     v-model="credentials.password"
                     required
@@ -54,6 +55,7 @@
                     required></v-text-field>
                   <v-text-field
                     label="password"
+                    type="password"
                     class="mt-1"
                     v-model="credentials.password"
                     required></v-text-field>

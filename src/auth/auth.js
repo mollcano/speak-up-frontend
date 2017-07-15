@@ -20,7 +20,6 @@ export default {
     var self = this
     context.$http.post(LOGIN_URL, creds)
     .then(data => {
-      console.log(data.body, 'login response data');
       this.user.id = data.body.id
       this.user.first_name= data.body.first_name
       this.user.last_name =data.body.last_name

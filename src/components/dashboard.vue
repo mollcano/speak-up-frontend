@@ -3,6 +3,9 @@
     <h2 class="text-xs-center">Welcome Back, {{ first_name }}</h2>
     <div class="box">
       <img class="user-pic ml-5 mb-3 mt-3" src="../assets/MollyPic.jpg" alt="">
+      <div id="chart">
+
+      </div>
 
     </div>
     <v-tabs dark fixed icons centered>
@@ -56,6 +59,9 @@ export default {
     })
     console.log(items[0])
   },
+  methods: {
+
+  }
 };
 </script>
 
@@ -64,7 +70,7 @@ export default {
   font-family: 'Open Sans', sans-serif;
 }
 .data-tab{
-  background-color: #4DE0FF;
+  background-color: #4DD6B6;
 }
 .tab-slider{
   background-color: #433A3F;

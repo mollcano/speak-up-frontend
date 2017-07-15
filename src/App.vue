@@ -1,10 +1,17 @@
 <template>
   <v-app id="example-2">
-    <v-navigation-drawer temporary v-model="drawer" :mini-variant.sync="mini" dark>
+    <v-navigation-drawer class="side-nav" temporary v-model="drawer" :mini-variant.sync="mini" dark>
+      <div v-if="shown">
+        <img class="shown side-nav-logo ml-5 mt-5" src="./assets/speakup_logo_hor.png" alt="">
+        <br>
+        <v-icon dark class="social" fa>facebook-f</v-icon>
+        <v-icon dark class="social" fa>twitter</v-icon>
+        <v-icon dark class= "social" fa>instagram</v-icon>
+        <v-icon dark class="social" fa>envelope</v-icon>
+      </div>
       <v-list class="pa-0">
         <v-list-item>
-          </v-list-tile>
-          <v-list-tile avatar tag="div">
+          <v-list-tile class="ml-3" avatar tag="div">
             <v-list-tile-avatar>
               <img src="./assets/MollyPic.jpg" />
             </v-list-tile-avatar>
@@ -12,9 +19,9 @@
               <v-list-tile-title>{{ user.first_name }} {{ user.last_name }}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn icon light @click.native.stop="mini = !mini">
+              <!-- <v-btn icon dark @click.native.stop="mini = !mini" v-on:click="shown = !shown">
                 <v-icon>chevron_left</v-icon>
-              </v-btn>
+              </v-btn> -->
             </v-list-tile-action>
           </v-list-tile>
         </v-list-item>
@@ -22,9 +29,9 @@
       <v-list class="pt-0" dense>
         <v-divider></v-divider>
         <v-list-item v-for="item in items" :key="item">
-          <v-list-tile>
+          <v-list-tile class="linked">
             <v-list-tile-action>
-              <router-link :to="item.path" class="links"><v-icon dark>{{ item.icon }}</v-icon></router-link>
+              <router-link :to="item.path" class="links"><v-icon class="ml-3" dark>{{ item.icon }}</v-icon></router-link>
             </v-list-tile-action>
             <v-list-tile-content>
               <router-link :to="item.path+user.id" class="links"><v-list-tile-title>{{ item.title }}</v-list-tile-title></router-link>
@@ -73,6 +80,7 @@ export default {
     return {
       drawer: null,
       fixed: false,
+      shown: true,
       items: [
         { title: 'Dashboard', icon: 'dashboard', path: '/dashboard/' },
         { title: 'Diary', icon: 'mic', path: '/diary/' },
@@ -108,6 +116,21 @@ export default {
   font-weight: 300;
   color: #FAFAFA;
 }
+.side-nav-logo{
+  width: 60%;
+}
+.social{
+  margin-left: 13%;
+  margin-top: 10%;
+  margin-bottom: 10%;
+}
+.social:hover{
+  color: #4DE0FF;
+}
+.linked:hover{
+  background-color: #4DE0FF;
+}
+
 
 
 

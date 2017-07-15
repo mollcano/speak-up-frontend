@@ -16,7 +16,8 @@ export default {
     return context.$http.post((ADD_AUDIO_URL+audio.user_id), formData, {
       method: 'post',
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data',
+        'Transfer-Encoding': 'chunked'
       },
     })
   }
