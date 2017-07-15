@@ -9,7 +9,7 @@
               <img src="./assets/MollyPic.jpg" />
             </v-list-tile-avatar>
             <v-list-tile-content>
-              <v-list-tile-title>Molly Brooks</v-list-tile-title>
+              <v-list-tile-title>{{ user.first_name }} {{ user.last_name }}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
               <v-btn icon light @click.native.stop="mini = !mini">
@@ -27,7 +27,7 @@
               <router-link :to="item.path" class="links"><v-icon dark>{{ item.icon }}</v-icon></router-link>
             </v-list-tile-action>
             <v-list-tile-content>
-              <router-link :to="item.path" class="links"><v-list-tile-title>{{ item.title }}</v-list-tile-title></router-link>
+              <router-link :to="item.path+user.id" class="links"><v-list-tile-title>{{ item.title }}</v-list-tile-title></router-link>
             </v-list-tile-content>
           </v-list-tile>
         </v-list-item>
@@ -40,7 +40,7 @@
       <v-spacer></v-spacer>
       <div class="text-xs-center">
         <v-menu offset-y>
-          <v-btn flat slot="activator"><v-icon>person</v-icon>Molly<v-icon>keyboard_arrow_down</v-icon></v-btn>
+          <v-btn flat slot="activator"><v-icon>person</v-icon>{{ user.first_name }}<v-icon>keyboard_arrow_down</v-icon></v-btn>
           <v-list>
             <v-list-tile>
               <v-list-tile-title>Log Out</v-list-tile-title>
@@ -66,18 +66,23 @@
 </template>
 
 <script>
+import auth from './auth/auth';
+
 export default {
   data() {
     return {
       drawer: null,
       fixed: false,
       items: [
-        { title: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
-        { title: 'Diary', icon: 'mic', path: '/diary' },
-        { title: 'Goals', icon: 'star', path: '/goals' },
+        { title: 'Dashboard', icon: 'dashboard', path: '/dashboard/' },
+        { title: 'Diary', icon: 'mic', path: '/diary/' },
+        { title: 'Goals', icon: 'star', path: '/goals/' },
       ],
       mini: false,
       right: null,
+      user: auth.user,
+      // first_name: auth.user.first_name,
+      // last_name: auth.user.last_name,
     };
   },
 };

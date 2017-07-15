@@ -12,14 +12,18 @@ export default {
   },
   user:{
     id: 0,
+    first_name: '',
+    last_name: '',
   },
   // Send a request to the login URL and save the returned JWT
   login(context, creds, redirect) {
     var self = this
     context.$http.post(LOGIN_URL, creds)
     .then(data => {
-      console.log(data.body.id, 'login response data');
-      this.user = {id: data.body.id}
+      console.log(data.body, 'login response data');
+      this.user.id = data.body.id
+      this.user.first_name= data.body.first_name
+      this.user.last_name =data.body.last_name
       // localStorage.setItem('access_token', data.access_token)
 
       // self.user.authenticated = true

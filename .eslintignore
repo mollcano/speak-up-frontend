@@ -3,7 +3,10 @@ config/*.js
 src/*.vue
 src/main.js
 src/watson/watson.js
+src/components/*.vue
+src/components/dashboard.vue0
 src/components/diary.vue
 src/components/Hello.vue
 src/auth/*.js
 src/highlight/highlight.js
+src/App.vue

@@ -20,12 +20,12 @@ export default new Router({
       component: Diary,
     },
     {
-      path: '/dashboard',
+      path: '/dashboard/:id',
       name: 'Dashboard',
       component: Dashboard,
     },
     {
-      path: '/goals',
+      path: '/goals/:id',
       name: 'Goals',
       component: Goals,
     },

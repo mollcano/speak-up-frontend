@@ -3,7 +3,7 @@
     <button id="presentation-btn" type="button" name="button" v-on:click="seen = !seen">Submit a New Presentation</button>
 
     <v-layout class="mb-3" column align-center v-if="seen">
-      <v-card align-center v-bind:class = "{'audioHide': audioShow}">
+      <v-card align-center>
         <v-toolbar dark>
           <v-toolbar-title>Upload a .wav audio file</v-toolbar-title>
           <div class="error" v-if="error">
@@ -17,11 +17,11 @@
             v-model="audio.title"
             required
           ></v-text-field>
-          <v-text-field
+          <input
             type="file"
             label=""
-            v-model="audio.file"
-          ></v-text-field>
+            v-on:change="audioUpload"
+          >
         </v-card-text>
         <v-card-actions class="pt-1">
           <v-btn id="submit-btn" @click.native="submit()">SUBMIT</v-btn>
@@ -86,22 +86,36 @@ export default {
     console.log(auth.user)
     this.$http.get('http://localhost:3000/audio/' + auth.user.id)
     .then(data => {
-      console.log("data")
-      for (var i=0; i<data.body.length; i++){
+      for (var i=(data.body.length)-1; i>=0; i--){
         this.items.push(data.body[i])
       }
-
     })
-    console.log(items[0])
   },
   methods: {
+    audioUpload(e){
+      var uploadedFile = e.target.files || e.dataTransfer.files
+
+      if(!uploadedFile.length){
+        console.log('Audio file is undefined')
+        return
+      }
+      this.audio.file = uploadedFile[0]
+    },
     submit() {
       const audio = {
         title: this.audio.title,
         file: this.audio.file,
         user_id: auth.user.id,
       };
-      watson.addAudio(this, audio);
+      watson.addAudio(this, audio)
+      .then(data => {
+        this.items.push(data.body)
+      })
+      .catch(err =>{
+        console.log(err)
+        this.error = err
+      });
+      this.seen = false;
     },
   },
 };
@@ -111,7 +125,8 @@ export default {
 <style scoped>
 
 #presentation-btn{
-  width: 100%;
+  width: 60%;
+  margin-left: 20%;
   background-color: #4DD6B6;
   height: 80px;
   font-family: 'Open Sans', sans-serif;

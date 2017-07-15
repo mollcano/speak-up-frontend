@@ -8,16 +8,16 @@ const GET_AUDIO_URL = API_URL + 'audio/';
 export default {
   addAudio(context, audio){
     var self = this
-    console.log('hello')
-    console.log(audio.user_id)
-    context.$http.post((ADD_AUDIO_URL+audio.user_id), audio)
-    console.log(audio)
-    .then(data => {
-      console.log('data', data)
-    })
-    .catch(err =>{
-      console.log(err)
-      context.error = err
+    var formData = new FormData()
+    formData.append('title', audio.title)
+    formData.append('file', audio.file)
+    formData.append('user_id', audio.user_id)
+    console.log(audio, formData)
+    return context.$http.post((ADD_AUDIO_URL+audio.user_id), formData, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
     })
   }
 }
