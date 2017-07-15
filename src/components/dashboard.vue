@@ -8,7 +8,7 @@
       </div>
 
     </div>
-    <v-tabs dark fixed icons centered>
+    <v-tabs dark fixed icons centered class="mb-3">
       <v-tabs-bar slot="activators" class="data-tab">
         <v-tabs-slider class="tab-slider"></v-tabs-slider>
         <v-tabs-item href="#tab-1">
