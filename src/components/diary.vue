@@ -53,7 +53,7 @@
               <v-icon fa class="icons">glass</v-icon> <h3 class="conf-title">Clarity</h3><input type="range" min="0" max="1" step="0.1" :value="item.confidence" class="range-bar"/><h3 class="conf-val">{{ item.confidence }}</h3>
             </div>
             <div class="fillers">
-              <svg class="whatFillers" style="height: 400; width: 450;"></svg>
+              
 
             </div>
 
@@ -94,7 +94,6 @@ export default {
       for (var i=(data.body.length)-1; i>=0; i--){
         this.items.push(data.body[i])
       }
-        this.renderWhatFillers(this.items)
     })
   },
   methods: {
