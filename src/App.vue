@@ -125,10 +125,10 @@ export default {
   margin-bottom: 10%;
 }
 .social:hover{
-  color: #4DE0FF;
+  color: #42C3DD;
 }
 .linked:hover{
-  background-color: #4DE0FF;
+  background-color: #42C3DD;
 }
 
 

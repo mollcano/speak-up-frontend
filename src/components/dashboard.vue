@@ -1,24 +1,53 @@
 <template>
   <div class="dashboard">
     <h2 class="text-xs-center">Welcome Back, {{ first_name }}</h2>
-    <div class="box">
-      <img class="user-pic ml-5 mb-3 mt-3" src="../assets/MollyPic.jpg" alt="">
-      <div id="chart">
-
+    <div class="box mb-5">
+      <div class="my-pic">
+        <img class="user-pic ml-4 mb-3 mt-4" src="../assets/MollyPic.jpg" alt="">
       </div>
+      <div class="stats mt-4 ml-2">
+        <div class="left-side">
+          <ul>
+            <li><v-icon fa class="icons mic">microphone</v-icon> {{ items.length }} Presentations</li>
+            <li><v-icon fa class="icons soc">futbol-o</v-icon> 2 Goals Met</li>
+            <li><v-icon fa class="icons fil">commenting-o</v-icon>  30% decrease in fillers</li>
+          </ul>
 
+        </div>
+        <div class="right-side">
+          <ul>
+            <li><v-icon fa class="icons pau">pause</v-icon> 15% decrease in pauses</li>
+            <li><v-icon fa class="icons clo">clock-o</v-icon>  15% increase in WPM</li>
+            <li><v-icon fa class="icons gla">glass</v-icon> 5% increase in clarity</li>
+          </ul>
+
+        </div>
+      </div>
+        <!-- <div class="top-two mb-4">
+          <v-icon fa class="icon-1">microphone</v-icon><v-text class="mr-5"> {{ items.length }} Presentations</v-text>
+          <v-icon fa>microphone</v-icon> 2 Goals Met
+        </div>
+        <div class="middle-two mb-4">
+          <v-icon fa>microphone</v-icon><v-text class="mr-5">  30% decrease in fillers</v-text>
+          <v-icon fa>microphone</v-icon> 15% decrease in pause length
+        </div>
+        <div class="bottom-two">
+          <v-icon fa>microphone</v-icon><v-text class="mr-5">  15% increase in WPM</v-text>
+          <v-icon fa>microphone</v-icon> 5% increase in clarity
+        </div>
+      </div> -->
     </div>
     <v-tabs dark fixed icons centered class="mb-3">
       <v-tabs-bar slot="activators" class="data-tab">
         <v-tabs-slider class="tab-slider"></v-tabs-slider>
-        <v-tabs-item href="#tab-1">
-          <v-icon>star</v-icon>
-          My Goals
-        </v-tabs-item>
-        <v-tabs-item href="#tab-2">
+        <v-tabs-item class="tab-title" href="#tab-1">
           <v-icon>assessment</v-icon>
           All Data
         </v-tabs-item>
+        <!-- <v-tabs-item href="#tab-2">
+          <v-icon>assessment</v-icon>
+          All Data
+        </v-tabs-item> -->
       </v-tabs-bar>
       <v-tabs-content
         v-for="i in 2"
@@ -26,12 +55,20 @@
         :id="'tab-' + i"
       >
         <v-card flat>
-          <svg class="fillers" style="height: 300; width: 350;"></svg>
-          <svg class="wpm" style="height: 300; width: 350;"></svg>
-          <svg class="pauses" style="height: 300; width: 350;"></svg>
-          <svg class="clarity" style="height: 300; width: 380;"></svg>
-          <svg class="whatFillers" style="height: 300; width: 380;"></svg>
-          <v-card-text>{{ items }}</v-card-text>
+          <div class="chart-titles">
+            <v-card-text class="leftmost-titles"><v-icon fa class="icons">commenting-o</v-icon> Fillers</v-card-text>
+            <v-card-text class="middle-title"><v-icon fa class="icons">clock-o</v-icon> WPM</v-card-text>
+            <v-card-text class="rightmost-title"><v-icon fa class="icons">pause</v-icon> Pauses</v-card-text>
+          </div>
+          <svg class="fillers" style="height: 400; width: 450;"></svg>
+          <svg class="wpm" style="height: 400; width: 450;"></svg>
+          <svg class="pauses" style="height: 400; width: 450;"></svg>
+          <div class="chart-titles">
+            <v-card-text class="leftmost-titles"><v-icon fa class="icons">glass</v-icon> Clarity</v-card-text>
+            <v-card-text><v-icon fa class="icons">quote-left</v-icon> Most Common Fillers Used</v-card-text>
+          </div>
+          <svg class="clarity" style="height: 400; width: 450;"></svg>
+          <svg class="whatFillers" style="height: 400; width: 450;"></svg>
         </v-card>
       </v-tabs-content>
     </v-tabs>
@@ -49,21 +86,10 @@ export default {
       ],
       first_name: auth.user.first_name,
       last_name: auth.user.last_name,
-      fillers: [
-        {"%HESITATION": 0},
-        {"so": 0},
-        {"like": 0},
-        {"you_know": 0},
-        {"well": 0},
-        {"actually": 0},
-        {"basically": 0},
-        {"i_mean": 0}
-      ],
     };
   },
   created: function() {
     var self = this
-    console.log(auth.user)
     this.$http.get('http://localhost:3000/audio/' + auth.user.id)
     .then(data => {
       for (var i=0; i<data.body.length; i++){
@@ -83,15 +109,13 @@ export default {
       const svg = d3.select('svg.fillers'),
           margin = {
               top: 50,
-              right: 10,
+              right: 20,
               bottom: 30,
               left: 80
           },
           width = +svg.attr('width') + (margin.left*3)+(margin.right*3),
           height = +svg.attr('height') + margin.top + (margin.bottom * 7);
       let div = d3.select('body').append('div').attr('class', 'toolTip');
-
-      console.log(jsonData, "jsonData")
       const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
       const y = d3.scaleLinear().rangeRound([height, 0]);
       const g = svg.append('g')
@@ -135,7 +159,7 @@ export default {
           })
           .attr('width', x.bandwidth())
           .transition()
-          .duration(1000)
+          .duration(4000)
           .attr('y', (d) => {
               return y(d.number_of_fillers);
           })
@@ -156,7 +180,7 @@ export default {
       const svg = d3.select('svg.wpm'),
           margin = {
               top: 50,
-              right: 10,
+              right: 20,
               bottom: 30,
               left: 80
           },
@@ -164,7 +188,6 @@ export default {
           height = +svg.attr('height') + margin.top + (margin.bottom * 7);
       let div = d3.select('body').append('div').attr('class', 'toolTip');
 
-      console.log(jsonData, "jsonData")
       const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
       const y = d3.scaleLinear().rangeRound([height, 0]);
       const g = svg.append('g')
@@ -208,7 +231,7 @@ export default {
           })
           .attr('width', x.bandwidth())
           .transition()
-          .duration(1000)
+          .duration(4000)
           .attr('y', (d) => {
               return y(d.wpm);
           })
@@ -229,7 +252,7 @@ export default {
       const svg = d3.select('svg.pauses'),
           margin = {
               top: 50,
-              right: 10,
+              right: 20,
               bottom: 30,
               left: 80
           },
@@ -237,7 +260,6 @@ export default {
           height = +svg.attr('height') + margin.top + (margin.bottom * 7);
       let div = d3.select('body').append('div').attr('class', 'toolTip');
 
-      console.log(jsonData, "jsonData")
       const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
       const y = d3.scaleLinear().rangeRound([height, 0]);
       const g = svg.append('g')
@@ -281,7 +303,7 @@ export default {
           })
           .attr('width', x.bandwidth())
           .transition()
-          .duration(1000)
+          .duration(4000)
           .attr('y', (d) => {
               return y(d.pauses);
           })
@@ -310,7 +332,6 @@ export default {
           height = +svg.attr('height') + margin.top + (margin.bottom * 7);
       let div = d3.select('body').append('div').attr('class', 'toolTip');
 
-      console.log(jsonData, "jsonData")
       const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
       const y = d3.scaleLinear().rangeRound([height, 0]);
       const g = svg.append('g')
@@ -354,7 +375,7 @@ export default {
           })
           .attr('width', x.bandwidth())
           .transition()
-          .duration(1000)
+          .duration(4000)
           .attr('y', (d) => {
               return y(d.confidence);
           })
@@ -382,17 +403,59 @@ export default {
           width = +svg.attr('width') + (margin.left*3)+(margin.right*3),
           height = +svg.attr('height') + margin.top + (margin.bottom * 7);
       let div = d3.select('body').append('div').attr('class', 'toolTip');
-
-      console.log(jsonData, "jsonData")
+      var fillers= [
+        {
+        "name": "hesitation",
+        "total": 0
+        },
+        {
+        "name": "so",
+        "total": 0
+        },
+        {
+        "name":"like",
+        "total": 0
+        },
+        {
+        "name":"you_know",
+        "total": 0
+        },
+        {
+        "name":"well",
+        "total": 0
+        },
+        {
+        "name":"actually",
+        "total": 0
+        },
+        {
+        "name":"basically",
+        "total": 0
+        },
+        {
+        "name":"i_mean",
+        "total": 0
+      }
+      ]
+      var total = 0
+      jsonData.map((d)=>{
+        for(var i=0; i<fillers.length; i++){
+          for(var j=0; j<Object.keys(d).length; j++){
+            if(Object.keys(d)[j] === fillers[i].name){
+              fillers[i].total += Object.values(d)[j]
+            }
+          }
+        }
+      })
       const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
       const y = d3.scaleLinear().rangeRound([height, 0]);
       const g = svg.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-      x.domain((jsonData).map((d) => {
-          return d.title;
+      x.domain((fillers).map((d) => {
+          return d.name;
       }));
       //y.domain([0, d3.max(dri, (d) => { return d.value; console.log(d.value) })]);
-      y.domain([0, 1]);
+      y.domain([0, 20]);
       // g.append('g')
       //     .attr('class', 'axis axis--x')
       //     .attr('transform', 'translate(0,' + height + ')')
@@ -409,17 +472,17 @@ export default {
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
           .attr('transform', 'translate(-' + (margin.left / 2) + ',' + (height / 2) + ')rotate(-90)') // text is drawn off the screen top left, move down and out and rotate
-          .text('Clarity');
+          .text('What Fillers Used');
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
           .attr('transform', 'translate(' + (width / 2) + ',' + (height + margin.bottom) + ')') // centre below axis
           .text('Speeches');
       g.selectAll('.bar')
-          .data(jsonData)
+          .data(fillers)
           .enter().append('rect')
           .attr('class', 'bar')
           .attr('x', (d) => {
-              return x(d.title);
+              return x(d.name);
           })
           //.attr('y', (d) => { return y(d.value); })
           .attr('y', (d) => {
@@ -427,18 +490,18 @@ export default {
           })
           .attr('width', x.bandwidth())
           .transition()
-          .duration(1000)
+          .duration(4000)
           .attr('y', (d) => {
-              return y(d.confidence);
+              return y(d.total);
           })
           .attr('height', (d) => {
-              return height - y(d.confidence);
+              return height - y(d.total);
           });
       d3.selectAll('.bar').on('mousemove', function(d) {
           div.style('left', d3.event.pageX + 10 + 'px');
           div.style('top', d3.event.pageY - 25 + 'px');
           div.style('display', 'inline-block');
-          div.html((d.title) + '<br>' + (d.confidence));
+          div.html((d.title) + '<br>' + (d.total));
       });
       d3.selectAll('.bar').on('mouseout', function(d) {
           div.style('display', 'none');
@@ -459,17 +522,66 @@ export default {
   background-color: #433A3F;
 }
 .user-pic{
-  width: 20%;
+  width: 80%;
   border-radius: 50%;
-  border: 2px solid #433A3F;
+  border: 4px double #433A3F;
 }
 .box{
   width: 70%;
   border: 5px double #4DD6B6;
   margin-bottom: 2%;
   margin-left: 15%;
+  display: flex;
+}
+.my-pic{
+  width: 25%;
+}
+.stats{
+  width: 75%;
+  font-size: 20px;
+  display: flex;
+}
+.left-side{
+  width: 50%;
+}
+.right-side{
+  width: 50%;
 }
 .bar {
   fill: steelblue;
 }
+.tab-title{
+  font-size: 25px;
+}
+.chart-titles{
+  display: flex;
+  font-size: 30px;
+}
+.leftmost-titles{
+  margin-left: 10%;
+}
+.middle-title{
+  margin-left: 10%;
+}
+.rightmost-title{
+  margin-right: 0;
+  margin-left: 10%;
+}
+.icons{
+  font-size: 150%;
+}
+.left-side li, .right-side li{
+  list-style-type: none;
+  margin-bottom: 10%;
+}
+.mic, .clo{
+  color: #23CE6B !important;
+}
+.soc, .gla{
+  color: #42C3DD !important;
+}
+.pau, .fil{
+  color: #DD7373 !important;
+}
+
 </style>
