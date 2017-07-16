@@ -41,7 +41,7 @@
       <v-tabs-bar slot="activators" class="data-tab">
         <v-tabs-slider class="tab-slider"></v-tabs-slider>
         <v-tabs-item class="tab-title" href="#tab-1">
-          <v-icon>assessment</v-icon>
+          <v-icon class="icons">assessment</v-icon>
           All Data
         </v-tabs-item>
         <!-- <v-tabs-item href="#tab-2">
@@ -60,9 +60,9 @@
             <v-card-text class="middle-title"><v-icon fa class="icons">clock-o</v-icon> WPM</v-card-text>
             <v-card-text class="rightmost-title"><v-icon fa class="icons">pause</v-icon> Pauses</v-card-text>
           </div>
-          <svg class="fillers" style="height: 400; width: 450;"></svg>
-          <svg class="wpm" style="height: 400; width: 450;"></svg>
-          <svg class="pauses" style="height: 400; width: 450;"></svg>
+          <svg class="fillers" style="height: 350; width: 450;"></svg>
+          <svg class="wpm" style="height: 350; width: 450;"></svg>
+          <svg class="pauses" style="height: 350; width: 450;"></svg>
           <div class="chart-titles">
             <v-card-text class="leftmost-titles"><v-icon fa class="icons">glass</v-icon> Clarity</v-card-text>
             <v-card-text><v-icon fa class="icons">quote-left</v-icon> Most Common Fillers Used</v-card-text>
@@ -108,7 +108,7 @@ export default {
     renderFillers: function(jsonData) {
       const svg = d3.select('svg.fillers'),
           margin = {
-              top: 50,
+              top: 30,
               right: 20,
               bottom: 30,
               left: 80
@@ -179,7 +179,7 @@ export default {
     renderWpm: function(jsonData) {
       const svg = d3.select('svg.wpm'),
           margin = {
-              top: 50,
+              top: 30,
               right: 20,
               bottom: 30,
               left: 80
@@ -251,7 +251,7 @@ export default {
     renderPauses: function(jsonData) {
       const svg = d3.select('svg.pauses'),
           margin = {
-              top: 50,
+              top: 30,
               right: 20,
               bottom: 30,
               left: 80
@@ -551,7 +551,7 @@ export default {
   fill: steelblue;
 }
 .tab-title{
-  font-size: 25px;
+  font-size: 23px;
 }
 .chart-titles{
   display: flex;

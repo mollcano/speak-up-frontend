@@ -28,6 +28,7 @@
         </v-card-actions>
       </v-card>
     </v-layout>
+    <h2><span>{{ first_name }}'s Diary</span></h2>
     <v-layout row>
     <v-flex xs12 sm12>
       <v-card class="mb-5" v-for="item in items" :key="item" v-bind:value="item === 2">
@@ -47,11 +48,17 @@
           </v-btn>
         </v-card-actions>
         <v-slide-y-transition>
-          <v-card-text v-show="show" class="hightlighter">
-            <svg id="chart" class="chart"></svg>
-            <v-icon light>textsms</v-icon>clarity: {{ item.confidence }}
-            <br>
-            transcript: {{ item.transcript }}
+          <v-card-text v-show="show">
+            <div class="clarity">
+              <v-icon fa class="icons">glass</v-icon> <h3 class="conf-title">Clarity</h3><input type="range" min="0" max="1" step="0.1" :value="item.confidence" class="range-bar"/><h3 class="conf-val">{{ item.confidence }}</h3>
+            </div>
+            <div class="fillers">
+              <svg class="whatFillers" style="height: 400; width: 450;"></svg>
+
+            </div>
+
+
+
           </v-card-text>
         </v-slide-y-transition>
       </v-card>
@@ -75,9 +82,8 @@ export default {
       },
       error: '',
       items: [],
-      user: {
-
-      },
+      first_name: auth.user.first_name,
+      last_name: auth.user.last_name,
     };
   },
   created: function() {
@@ -88,9 +94,8 @@ export default {
       for (var i=(data.body.length)-1; i>=0; i--){
         this.items.push(data.body[i])
       }
-        console.log("items", this.items)
+        this.renderWhatFillers(this.items)
     })
-    console.log("my items", (this.items))
   },
   methods: {
     audioUpload(e){
@@ -118,19 +123,16 @@ export default {
       });
       this.seen = false;
     },
-    renderChart: function(data) {
 
-    },
-  },
-  mounted: function() {
-    this.renderChart();
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.diary {
+  font-family: 'Open Sans', sans-serif;
+}
 #presentation-btn{
   width: 60%;
   margin-left: 20%;
@@ -169,16 +171,126 @@ export default {
   margin-left: 10px;
   margin-right: 0px;
 }
-.redTranscript{
-  color: red;
+h2 {
+  width:100%;
+  text-align:center;
+  border-bottom: 1px solid #000;
+  line-height:0.1em;
+  margin:10px 0 20px;
+  margin-top: 5%;
+  margin-bottom: 5%;
 }
-.chart rect {
-  fill: steelblue;
+h2 span {
+  background-color: rgb(249, 249, 249);
+  padding:0 10px;
 }
-.chart text {
-  fill: white;
-  font: 10px sans-serif;
-  text-anchor: end;
+
+
+
+input[type=range] {
+  -webkit-appearance: none;
+  margin: 18px 0;
+  width: 80%;
 }
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 80%;
+  height: 8.4px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #42C3DD;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -14px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #367ebd;
+}
+input[type=range]::-moz-range-track {
+  width: 80%;
+  height: 8.4px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #42C3DD;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 80%;
+  height: 8.4px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  border-width: 16px 0;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #2a6495;
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+input[type=range]::-ms-fill-upper {
+  background: #42C3DD;
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+input[type=range]::-ms-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #42C3DD;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #367ebd;
+}
+.icons{
+  font-size: 150% !important;
+}
+.clarity{
+  font-size: 20px;
+}
+.conf-title{
+  margin-right: 2%;
+  font-size: 25px;
+  display: inline;
+}
+.conf-val{
+  margin-left: 2%;
+  font-size: 25px;
+  display: inline;
+}
+
 
 </style>
