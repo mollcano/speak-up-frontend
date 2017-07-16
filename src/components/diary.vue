@@ -3,7 +3,7 @@
     <button id="presentation-btn" type="button" name="button" v-on:click="seen = !seen">Submit a New Presentation</button>
 
     <v-layout class="mb-3" column align-center v-if="seen">
-      <v-card align-center>
+      <v-card class="mt-3"align-center>
         <v-toolbar dark>
           <v-toolbar-title>Upload a .wav audio file</v-toolbar-title>
           <div class="error" v-if="error">
@@ -48,7 +48,8 @@
         </v-card-actions>
         <v-slide-y-transition>
           <v-card-text v-show="show" class="hightlighter">
-            <v-icon dark>textsms</v-icon>clarity: {{ item.confidence }}
+            <svg id="chart" class="chart"></svg>
+            <v-icon light>textsms</v-icon>clarity: {{ item.confidence }}
             <br>
             transcript: {{ item.transcript }}
           </v-card-text>
@@ -73,9 +74,7 @@ export default {
         file: '',
       },
       error: '',
-      items: [
-
-      ],
+      items: [],
       user: {
 
       },
@@ -89,7 +88,9 @@ export default {
       for (var i=(data.body.length)-1; i>=0; i--){
         this.items.push(data.body[i])
       }
+        console.log("items", this.items)
     })
+    console.log("my items", (this.items))
   },
   methods: {
     audioUpload(e){
@@ -117,6 +118,12 @@ export default {
       });
       this.seen = false;
     },
+    renderChart: function(data) {
+
+    },
+  },
+  mounted: function() {
+    this.renderChart();
   },
 };
 </script>
@@ -132,7 +139,11 @@ export default {
   font-family: 'Open Sans', sans-serif;
   font-weight: 600;
   font-size: 300%;
-  color: #FAFAFA
+  color: #FAFAFA;
+  border-style: outset;
+}
+*, :after, :before{
+  box-sizing: initial;
 }
 #hidden{
   display: none;
@@ -160,6 +171,14 @@ export default {
 }
 .redTranscript{
   color: red;
+}
+.chart rect {
+  fill: steelblue;
+}
+.chart text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: end;
 }
 
 </style>

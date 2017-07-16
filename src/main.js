@@ -8,6 +8,9 @@ import VueResource from 'vue-resource';
 // import moment from 'moment';
 // import VueMoment from 'vue-moment'
 
+/* eslint-disable */
+window.d3 = require('d3');
+
 import router from './router';
 
 // Vue.use(moment);

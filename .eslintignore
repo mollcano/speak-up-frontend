@@ -10,3 +10,4 @@ src/components/Hello.vue
 src/auth/*.js
 src/highlight/highlight.js
 src/App.vue
+src/graph.js

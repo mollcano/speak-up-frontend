@@ -26,6 +26,8 @@
         :id="'tab-' + i"
       >
         <v-card flat>
+          <div id="containerChart">
+          </div>
           <v-card-text>{{ items }}</v-card-text>
         </v-card>
       </v-tabs-content>
@@ -51,17 +53,41 @@ export default {
     console.log(auth.user)
     this.$http.get('http://localhost:3000/audio/' + auth.user.id)
     .then(data => {
-      console.log("data")
       for (var i=0; i<data.body.length; i++){
-        this.items.push(data.body[i])
+        this.items===this.items.push(data.body[i])
       }
-
     })
-    console.log(items[0])
   },
   methods: {
+    renderChart: function(jsonData) {
+      var svgWidth = 600;
+      var svgHeight = 300;
 
-  }
+      var yScale = d3.scaleLinear()
+      .domain([0, 30])
+      .range([0, svgHeight]);
+
+      var xScale = d3.scaleBand()
+      .domain(jsonData.map(function(d) { return d.title; }))
+      .range([0, svgWidth])
+      .padding(0.1);
+
+      var svg = d3.select("#containerChart")
+      .append("svg")
+      .attr("x", function (d) {return xScale(d.title);})
+      .attr("y", 0)
+      .attr("height", function (d) { return yScale(d.number_of_fillers); })
+      .attr("width", xScale.range)
+      .attr("fill", "#4DE0FF");
+
+      svg.selectAll("rect")
+      .data(jsonData)
+      .enter().append("rect")
+    },
+  },
+  mounted: function() {
+    this.renderChart(this.items);
+  },
 };
 </script>
 
@@ -85,5 +111,8 @@ export default {
   border: 5px double #4DD6B6;
   margin-bottom: 2%;
   margin-left: 15%;
+}
+.bar {
+  fill: steelblue;
 }
 </style>

@@ -9,6 +9,9 @@ module.exports = {
   env: {
     browser: true,
   },
+  "globals": {
+    d3: true,
+  },
   extends: 'airbnb-base',
   // required to lint *.vue files
   plugins: [
