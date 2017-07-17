@@ -536,7 +536,7 @@ export default {
   width: 50%;
 }
 .bar {
-  fill: steelblue;
+  fill: #42C3DD;
 }
 .tab-title{
   font-size: 23px;
@@ -571,5 +571,14 @@ export default {
 .pau, .fil{
   color: #DD7373 !important;
 }
-
+.legend {
+  border: 1px solid #555555;
+  border-radius: 5px 5px 5px 5px;
+  font-size: 0.8em;
+  margin: 10px;
+  padding: 8px;
+}
+.bld {
+    font-weight: bold;
+}
 </style>

@@ -29,11 +29,11 @@
       </v-card>
     </v-layout>
     <h2><span>{{ first_name }}'s Diary</span></h2>
-<svg class="myFillers" height="400" width="450"></svg>
-<svg class="pace" height="400" width="450"></svg>
+<!-- <svg class="myFillers" height="400" width="450"></svg>
+<svg class="pace" height="350" width="1250"></svg> -->
     <v-layout row>
     <v-flex xs12 sm12>
-      <v-card class="mb-5" v-for="item in items" :key="item" v-bind:value="item === 2">
+      <v-card class="mb-5" v-for="item in items" :key="item" v-bind:value="item === 2" >
         <v-card-title class="diary-panels" primary-title>
           <div>
             <div class="headline">{{ item.title }}</div>
@@ -45,22 +45,20 @@
         </v-card-title>
         <v-card-actions class="ml-2">
           Analyze this presentation
-          <v-btn icon @click.native="show = !show">
+          <v-btn icon @click.native="show[item.id] = !show[item.id]">
             <v-icon>{{ show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
           </v-btn>
         </v-card-actions>
         <v-slide-y-transition>
-          <v-card-text v-show="show">
+          <v-card-text v-show="show[item.id]">
             <div class="clarity">
               <v-icon fa class="icons">glass</v-icon> <h3 class="conf-title">Clarity</h3><input type="range" min="0" max="1" step="0.1" :value="item.confidence" class="range-bar"/><h3 class="conf-val">{{ item.confidence }}</h3>
             </div>
             <div class="fillers">
-              <svg class="myFillers" height="400" width="450"></svg>
-              {{ item.pace }}
-              {{ item.fillers }}
+              <v-icon fa class="icons">commenting-o</v-icon> <h3 class="fillers-title">Fillers</h3><svg :id="item.id+'myFillers'" class="myFillers" height="400" width="450"></svg>
             </div>
-            <div class="pace">
-              <svg class="pace" height="400" width="450"></svg>
+            <div class="pacing">
+              <v-icon fa class="icons">fast-forward</v-icon> <h3 class="pace-title">Pace</h3><svg class="pace" height="400" width="850"></svg>
             </div>
           </v-card-text>
         </v-slide-y-transition>
@@ -80,7 +78,7 @@ export default {
 
     return {
       seen: false,
-      show: false,
+      show: {},
       audio: {
         title: '',
         file: '',
@@ -93,17 +91,28 @@ export default {
       last_name: auth.user.last_name,
     };
   },
+  watch: {
+    show: {
+      handler(val, oldval){
+        console.log(this.show)
+        this.renderMyFillers(this.fillers)
+        this.renderpace(this.pace)
+      },
+      deep: true
+    }
+  },
   created: function() {
     var self = this
     console.log(auth.user)
     this.$http.get('http://localhost:3000/audio/' + auth.user.id)
     .then(data => {
+      var show = {}
       for (var i=(data.body.length)-1; i>=0; i--){
+        show[data.body[i].id] =false
         this.items.push(data.body[i])
       }
       // console.log(data.body[data.body.length-1].fillers)
-      this.renderMyFillers(this.fillers)
-      this.renderpace(this.pace)
+      this.show = show
 
     })
   },
@@ -133,9 +142,10 @@ export default {
       });
       this.seen = false;
     },
-    renderMyFillers: function(jsonData) {
+    renderMyFillers: function(jsonData, id) {
       console.log("hello yo");
-      console.log(d3.select('svg.myFillers').attr('width'), "width")
+      // console.log(d3.select('svg.myFillers').attr('width'), "width")
+      // const svg = d3.select('#' + this.items.id + "myFillers"),
       const svg = d3.select('svg.myFillers'),
           margin = {
               top: 30,
@@ -157,7 +167,7 @@ export default {
           return d.name;
       }));
       //y.domain([0, d3.max(dri, (d) => { return d.value; console.log(d.value) })]);
-      y.domain([0, 15]);
+      y.domain([0, 10]);
       // g.append('g')
       //     .attr('class', 'axis axis--x')
       //     .attr('transform', 'translate(0,' + height + ')')
@@ -174,7 +184,6 @@ export default {
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
           .attr('transform', 'translate(-' + (margin.left / 2) + ',' + (height / 2) + ')rotate(-90)') // text is drawn off the screen top left, move down and out and rotate
-          .text('Fillers');
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
           .attr('transform', 'translate(' + (width / 2) + ',' + (height + margin.bottom) + ')') // centre below axis
@@ -218,8 +227,8 @@ export default {
               bottom: 30,
               left: 80
           },
-          width = +svg.attr('width') + (margin.left)+(margin.right),
-          height = +svg.attr('height') - margin.top - (margin.bottom);
+          width = +svg.attr('width') - (margin.left)-(margin.right),
+          height = +svg.attr('height') - margin.top - (margin.bottom*3);
       let div = d3.select('body').append('div').attr('class', 'toolTip');
       const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
       const y = d3.scaleLinear().rangeRound([height, 0]);
@@ -247,7 +256,6 @@ export default {
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
           .attr('transform', 'translate(-' + (margin.left / 2) + ',' + (height / 2) + ')rotate(-90)') // text is drawn off the screen top left, move down and out and rotate
-          .text('Pace');
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
           .attr('transform', 'translate(' + (width / 2) + ',' + (height + margin.bottom) + ')') // centre below axis
@@ -282,6 +290,10 @@ export default {
       });
     },
   },
+  mounted: function(){
+    // setTimeout(() => this.renderMyFillers(this.fillers), 2000);
+    // this.renderpace(this.pace)
+  }
 };
 </script>
 
@@ -302,8 +314,6 @@ export default {
   border-style: outset;
   outline: none;
 }
-
-
 #hidden{
   display: none;
   background-color: #433A3F;
@@ -341,8 +351,6 @@ h2 span {
   background-color: rgb(249, 249, 249);
   padding:0 10px;
 }
-
-
 
 input[type=range] {
   -webkit-appearance: none;
@@ -435,10 +443,10 @@ input[type=range]:focus::-ms-fill-upper {
 .icons{
   font-size: 150% !important;
 }
-.clarity{
+.clarity, .fillers, .pacing{
   font-size: 20px;
 }
-.conf-title{
+.conf-title, .fillers-title, .pace-title{
   margin-right: 2%;
   font-size: 25px;
   display: inline;
@@ -447,6 +455,34 @@ input[type=range]:focus::-ms-fill-upper {
   margin-left: 2%;
   font-size: 25px;
   display: inline;
+}
+.bar {
+    fill: #42C3DD;
+}
+.bar:hover {
+    fill: brown;
+}
+.axis--x path {
+    display: none;
+}
+.toolTip {
+    position: absolute;
+    display: none;
+    width: auto;
+    height: auto;
+    background: none repeat scroll 0 0 white;
+    border: 0 none;
+    border-radius: 8px 8px 8px 8px;
+    box-shadow: -3px 3px 15px #888888;
+    color: black;
+    font: 12px sans-serif;
+    padding: 5px;
+    text-align: center;
+    z-index: 10;
+}
+label {
+    color: white;
+    font-weight: lighter;
 }
 
 
