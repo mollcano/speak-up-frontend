@@ -13,6 +13,7 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs"
   },
   "dependencies": {
+    "c3": "^0.4.14",
     "chart.js": "^2.6.0",
     "chartjs": "^0.3.24",
     "d3": "^4.10.0",

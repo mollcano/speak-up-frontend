@@ -23,19 +23,6 @@
 
         </div>
       </div>
-        <!-- <div class="top-two mb-4">
-          <v-icon fa class="icon-1">microphone</v-icon><v-text class="mr-5"> {{ items.length }} Presentations</v-text>
-          <v-icon fa>microphone</v-icon> 2 Goals Met
-        </div>
-        <div class="middle-two mb-4">
-          <v-icon fa>microphone</v-icon><v-text class="mr-5">  30% decrease in fillers</v-text>
-          <v-icon fa>microphone</v-icon> 15% decrease in pause length
-        </div>
-        <div class="bottom-two">
-          <v-icon fa>microphone</v-icon><v-text class="mr-5">  15% increase in WPM</v-text>
-          <v-icon fa>microphone</v-icon> 5% increase in clarity
-        </div>
-      </div> -->
     </div>
     <v-tabs dark fixed icons centered class="mb-3">
       <v-tabs-bar slot="activators" class="data-tab">
@@ -506,7 +493,8 @@ export default {
       d3.selectAll('.bar').on('mouseout', function(d) {
           div.style('display', 'none');
       });
-    }
+    },
+
   },
 };
 </script>

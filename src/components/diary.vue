@@ -29,7 +29,8 @@
       </v-card>
     </v-layout>
     <h2><span>{{ first_name }}'s Diary</span></h2>
-
+<svg class="myFillers" height="400" width="450"></svg>
+<svg class="pace" height="400" width="450"></svg>
     <v-layout row>
     <v-flex xs12 sm12>
       <v-card class="mb-5" v-for="item in items" :key="item" v-bind:value="item === 2">
@@ -55,10 +56,11 @@
             </div>
             <div class="fillers">
               <svg class="myFillers" height="400" width="450"></svg>
-
               {{ item.pace }}
               {{ item.fillers }}
-
+            </div>
+            <div class="pace">
+              <svg class="pace" height="400" width="450"></svg>
             </div>
           </v-card-text>
         </v-slide-y-transition>
@@ -85,6 +87,8 @@ export default {
       },
       error: '',
       items: [],
+      fillers: [{ "name": "um, uh, hmm", "fillerNum": 7 }, { "name": "so", "fillerNum": 5 }, { "name": "like", "fillerNum": 2 }, { "name": "you know", "fillerNum": 0 }, { "name": "well", "fillerNum": 0 }, { "name": "actually", "fillerNum": 0 }, { "name": "basically", "fillerNum": 1 }, { "name": "I mean", "fillerNum": 0 }],
+      pace:  [ { "name": "part1", "part": 111.842804036113 }, { "name": "part2", "part": 254.91237387148172 }, { "name": "part3", "part": 159.32023366967607 }, { "name": "part4", "part": 286.77642060541694 }, { "name": "part4", "part": 286.77642060541694 }, { "name": "part5", "part": 318.64046733935214 }, { "name": "part6", "part": 191.1842804036113 }, { "name": "part7", "part": 191.1842804036113 }, { "name": "part8", "part": 95.59214020180565 }, { "name": "part9", "part": 31.864046733935215 }, { "name": "part10", "part": 31.864046733935215 } ],
       first_name: auth.user.first_name,
       last_name: auth.user.last_name,
     };
@@ -97,8 +101,9 @@ export default {
       for (var i=(data.body.length)-1; i>=0; i--){
         this.items.push(data.body[i])
       }
-      console.log(data.body[data.body.length-1].fillers)
-      this.renderMyFillers(data.body[data.body.length-1].fillers)
+      // console.log(data.body[data.body.length-1].fillers)
+      this.renderMyFillers(this.fillers)
+      this.renderpace(this.pace)
 
     })
   },
@@ -130,29 +135,29 @@ export default {
     },
     renderMyFillers: function(jsonData) {
       console.log("hello yo");
-      // console.log(d3.select('svg.myFillers').attr('width'), "width")
+      console.log(d3.select('svg.myFillers').attr('width'), "width")
       const svg = d3.select('svg.myFillers'),
           margin = {
               top: 30,
               right: 20,
               bottom: 30,
               left: 80
-          };
-          // width = +svg.attr('width') + (margin.left*3)+(margin.right*3),
-          // height = +svg.attr('height') + margin.top + (margin.bottom * 7);
+          },
+          width = +svg.attr('width') + (margin.left)+(margin.right),
+          height = +svg.attr('height') - margin.top - (margin.bottom);
       let div = d3.select('body').append('div').attr('class', 'toolTip');
-      const x = d3.scaleBand().rangeRound([0, 700]).padding(0.1);
-      const y = d3.scaleLinear().rangeRound([500, 0]);
+      const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
+      const y = d3.scaleLinear().rangeRound([height, 0]);
       const g = svg.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
       x.domain((jsonData).map((d) => {
-        console.log(d.name)
-        console.log(d.fillerNum)
+        console.log(d.name, "filler name")
+        console.log(d.fillerNum, "fillernum")
           return d.name;
       }));
       //y.domain([0, d3.max(dri, (d) => { return d.value; console.log(d.value) })]);
-      y.domain([0, 8]);
+      y.domain([0, 15]);
       // g.append('g')
       //     .attr('class', 'axis axis--x')
       //     .attr('transform', 'translate(0,' + height + ')')
@@ -168,11 +173,11 @@ export default {
           // .text('Frequency');
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
-          .attr('transform', 'translate(-' + (margin.left / 2) + ',' + (500 / 2) + ')rotate(-90)') // text is drawn off the screen top left, move down and out and rotate
+          .attr('transform', 'translate(-' + (margin.left / 2) + ',' + (height / 2) + ')rotate(-90)') // text is drawn off the screen top left, move down and out and rotate
           .text('Fillers');
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
-          .attr('transform', 'translate(' + (700 / 2) + ',' + (500 + margin.bottom) + ')') // centre below axis
+          .attr('transform', 'translate(' + (width / 2) + ',' + (height + margin.bottom) + ')') // centre below axis
       g.selectAll('.bar')
           .data(jsonData)
           .enter().append('rect')
@@ -182,22 +187,95 @@ export default {
           })
           //.attr('y', (d) => { return y(d.value); })
           .attr('y', (d) => {
-              return 500;
+              return height;
           })
           .attr('width', x.bandwidth())
           .transition()
-          .duration(4000)
+          .duration(2000)
           .attr('y', (d) => {
               return y(d.fillerNum);
           })
           .attr('height', (d) => {
-              return 500 - y(d.fillerNum);
+              return height - y(d.fillerNum);
           });
       d3.selectAll('.bar').on('mousemove', function(d) {
           div.style('left', d3.event.pageX + 10 + 'px');
           div.style('top', d3.event.pageY - 25 + 'px');
           div.style('display', 'inline-block');
           div.html((d.name) + '<br>' + (d.fillerNum));
+      });
+      d3.selectAll('.bar').on('mouseout', function(d) {
+          div.style('display', 'none');
+      });
+    },
+    renderpace: function(jsonData) {
+      console.log("hello yo");
+      console.log(d3.select('svg.pace').attr('width'), "width")
+      const svg = d3.select('svg.pace'),
+          margin = {
+              top: 30,
+              right: 20,
+              bottom: 30,
+              left: 80
+          },
+          width = +svg.attr('width') + (margin.left)+(margin.right),
+          height = +svg.attr('height') - margin.top - (margin.bottom);
+      let div = d3.select('body').append('div').attr('class', 'toolTip');
+      const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
+      const y = d3.scaleLinear().rangeRound([height, 0]);
+      const g = svg.append('g')
+          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+      x.domain((jsonData).map((d) => {
+          return d.name;
+      }));
+      //y.domain([0, d3.max(dri, (d) => { return d.value; console.log(d.value) })]);
+      y.domain([0, 300]);
+      // g.append('g')
+      //     .attr('class', 'axis axis--x')
+      //     .attr('transform', 'translate(0,' + height + ')')
+      //     .call(d3.axisBottom(x));
+      g.append('g')
+          .attr('class', 'axis axis--y')
+          .call(d3.axisLeft(y).ticks(10))
+          .append('text')
+          .attr('transform', 'rotate(-90)')
+          .attr('y', 6)
+          .attr('dy', '0.71em')
+          .attr('text-anchor', 'end')
+          // .text('Frequency');
+      g.append('text')
+          .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
+          .attr('transform', 'translate(-' + (margin.left / 2) + ',' + (height / 2) + ')rotate(-90)') // text is drawn off the screen top left, move down and out and rotate
+          .text('Pace');
+      g.append('text')
+          .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
+          .attr('transform', 'translate(' + (width / 2) + ',' + (height + margin.bottom) + ')') // centre below axis
+      g.selectAll('.bar')
+          .data(jsonData)
+          .enter().append('rect')
+          .attr('class', 'bar')
+          .attr('x', (d) => {
+              return x(d.name);
+          })
+          //.attr('y', (d) => { return y(d.value); })
+          .attr('y', (d) => {
+              return height;
+          })
+          .attr('width', x.bandwidth())
+          .transition()
+          .duration(2000)
+          .attr('y', (d) => {
+              return y(d.part);
+          })
+          .attr('height', (d) => {
+              return height - y(d.part);
+          });
+      d3.selectAll('.bar').on('mousemove', function(d) {
+          div.style('left', d3.event.pageX + 10 + 'px');
+          div.style('top', d3.event.pageY - 25 + 'px');
+          div.style('display', 'inline-block');
+          div.html((d.name) + '<br>' + (d.part));
       });
       d3.selectAll('.bar').on('mouseout', function(d) {
           div.style('display', 'none');
