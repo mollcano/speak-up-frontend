@@ -54,7 +54,10 @@
               <v-icon fa class="icons">glass</v-icon> <h3 class="conf-title">Clarity</h3><input type="range" min="0" max="1" step="0.1" :value="item.confidence" class="range-bar"/><h3 class="conf-val">{{ item.confidence }}</h3>
             </div>
             <div class="fillers">
-              <svg class="myFillers" style="height: 400; width: 450;"></svg>
+              <svg class="myFillers" height="400" width="450"></svg>
+
+              {{ item.pace }}
+              {{ item.fillers }}
 
             </div>
           </v-card-text>
@@ -94,7 +97,8 @@ export default {
       for (var i=(data.body.length)-1; i>=0; i--){
         this.items.push(data.body[i])
       }
-      this.renderMyFillers(this.items)
+      console.log(data.body[data.body.length-1].fillers)
+      this.renderMyFillers(data.body[data.body.length-1].fillers)
 
     })
   },
@@ -125,22 +129,27 @@ export default {
       this.seen = false;
     },
     renderMyFillers: function(jsonData) {
+      console.log("hello yo");
+      // console.log(d3.select('svg.myFillers').attr('width'), "width")
       const svg = d3.select('svg.myFillers'),
           margin = {
               top: 30,
               right: 20,
               bottom: 30,
               left: 80
-          },
-          width = +svg.attr('width') + (margin.left*3)+(margin.right*3),
-          height = +svg.attr('height') + margin.top + (margin.bottom * 7);
+          };
+          // width = +svg.attr('width') + (margin.left*3)+(margin.right*3),
+          // height = +svg.attr('height') + margin.top + (margin.bottom * 7);
       let div = d3.select('body').append('div').attr('class', 'toolTip');
-      const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
-      const y = d3.scaleLinear().rangeRound([height, 0]);
+      const x = d3.scaleBand().rangeRound([0, 700]).padding(0.1);
+      const y = d3.scaleLinear().rangeRound([500, 0]);
       const g = svg.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
       x.domain((jsonData).map((d) => {
-          return d.title;
+        console.log(d.name)
+        console.log(d.fillerNum)
+          return d.name;
       }));
       //y.domain([0, d3.max(dri, (d) => { return d.value; console.log(d.value) })]);
       y.domain([0, 8]);
@@ -159,37 +168,36 @@ export default {
           // .text('Frequency');
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
-          .attr('transform', 'translate(-' + (margin.left / 2) + ',' + (height / 2) + ')rotate(-90)') // text is drawn off the screen top left, move down and out and rotate
-          .text('Num of Fillers');
+          .attr('transform', 'translate(-' + (margin.left / 2) + ',' + (500 / 2) + ')rotate(-90)') // text is drawn off the screen top left, move down and out and rotate
+          .text('Fillers');
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
-          .attr('transform', 'translate(' + (width / 2) + ',' + (height + margin.bottom) + ')') // centre below axis
-          .text('Speeches');
+          .attr('transform', 'translate(' + (700 / 2) + ',' + (500 + margin.bottom) + ')') // centre below axis
       g.selectAll('.bar')
           .data(jsonData)
           .enter().append('rect')
           .attr('class', 'bar')
           .attr('x', (d) => {
-              return x(d.title);
+              return x(d.name);
           })
           //.attr('y', (d) => { return y(d.value); })
           .attr('y', (d) => {
-              return height;
+              return 500;
           })
           .attr('width', x.bandwidth())
           .transition()
           .duration(4000)
           .attr('y', (d) => {
-              return y(d.number_of_fillers);
+              return y(d.fillerNum);
           })
           .attr('height', (d) => {
-              return height - y(d.number_of_fillers);
+              return 500 - y(d.fillerNum);
           });
       d3.selectAll('.bar').on('mousemove', function(d) {
           div.style('left', d3.event.pageX + 10 + 'px');
           div.style('top', d3.event.pageY - 25 + 'px');
           div.style('display', 'inline-block');
-          div.html((d.title) + '<br>' + (d.number_of_fillers));
+          div.html((d.name) + '<br>' + (d.fillerNum));
       });
       d3.selectAll('.bar').on('mouseout', function(d) {
           div.style('display', 'none');
