@@ -55,10 +55,10 @@
               <v-icon fa class="icons">glass</v-icon> <h3 class="conf-title">Clarity</h3><input type="range" min="0" max="1" step="0.1" :value="item.confidence" class="range-bar"/><h3 class="conf-val">{{ item.confidence }}</h3>
             </div>
             <div class="fillers">
-              <v-icon fa class="icons">commenting-o</v-icon> <h3 class="fillers-title">Fillers</h3><svg :id="item.id+'myFillers'" class="myFillers" height="400" width="850"></svg>
+              <v-icon fa class="icons">commenting-o</v-icon> <h3 class="fillers-title">Fillers</h3><svg :id="item.id+'myFillers'" class="myFillers" height="400" width="1050"></svg>
             </div>
             <div class="pacing">
-              <v-icon fa class="icons">fast-forward</v-icon> <h3 class="pace-title">Pace</h3><svg class="pace" height="400" width="850"></svg>
+              <v-icon fa class="icons">fast-forward</v-icon> <h3 class="pace-title">Pace</h3><svg class="pace" height="400" width="1050"></svg>
             </div>
 
           </v-card-text>
@@ -145,7 +145,7 @@ export default {
     },
     renderHorizontal: function(jsonData){
       var svg = d3.select("svg.myFillers"),
-      margin = {top: 20, right: 20, bottom: 30, left: 80},
+      margin = {top: 20, right: 10, bottom: 30, left: 70},
       width = +svg.attr("width") - margin.left - margin.right,
       height = +svg.attr("height") - margin.top - margin.bottom;
 
@@ -197,9 +197,9 @@ export default {
       const svg = d3.select('svg.pace'),
           margin = {
               top: 30,
-              right: 20,
+              right: 10,
               bottom: 30,
-              left: 80
+              left: 60
           },
           width = +svg.attr('width') - (margin.left)-(margin.right),
           height = +svg.attr('height') - margin.top - (margin.bottom*3);
@@ -420,7 +420,7 @@ input[type=range]:focus::-ms-fill-upper {
 .clarity, .fillers, .pacing{
   font-size: 20px;
 }
-.conf-title, .fillers-title, .pace-title{
+.conf-title{
   margin-right: 2%;
   font-size: 25px;
   display: inline;
@@ -430,8 +430,11 @@ input[type=range]:focus::-ms-fill-upper {
   font-size: 25px;
   display: inline;
 }
-.bar {
-	fill: #42C3DD;
+.fillers .bar {
+	fill: #23CE6B;
+}
+.pacing .bar{
+  fill: #DD7373;
 }
 .axis path,
 .axis line {
@@ -452,6 +455,19 @@ input[type=range]:focus::-ms-fill-upper {
   border: 1px solid #6F257F;
   padding: 14px;
   text-align: center;
+}
+.fillers, .pacing{
+  display: flex;
+}
+.fillers svg, .pacing svg{
+  margin-left: 2%;
+}
+.fillers-title, .pace-title{
+  margin-right: 2%;
+  margin-left: 1%;
+  font-size: 25px;
+  align-self: center;
+  margin-top: 1%;
 }
 
 

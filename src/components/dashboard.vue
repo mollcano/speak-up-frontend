@@ -47,27 +47,34 @@
             <v-card-text class="middle-title"><v-icon fa class="icons">clock-o</v-icon> WPM</v-card-text>
             <v-card-text class="rightmost-title"><v-icon fa class="icons">pause</v-icon> Pauses</v-card-text>
           </div>
-          <div class="countFillers">
-            <svg class="fillers" style="height: 350; width: 450;"></svg>
-          </div>
-          <div class="myWPM">
-            <svg class="wpm" style="height: 350; width: 450;"></svg>
+          <div class="top-charts">
+            <div class="countFillers">
+              <svg class="fillers" style="height: 350; width: 450;"></svg>
+            </div>
+            <div class="myWPM">
+              <svg class="wpm" style="height: 350; width: 450;"></svg>
+            </div>
+            <div class="myPauses">
+              <svg class="pauses" style="height: 350; width: 450;"></svg>
+            </div>
           </div>
 
-          <div class="myPauses">
-            <svg class="pauses" style="height: 350; width: 450;"></svg>
-          </div>
           <div class="chart-titles">
             <v-card-text class="leftmost-titles"><v-icon fa class="icons">glass</v-icon> Clarity</v-card-text>
             <v-card-text><v-icon fa class="icons">quote-left</v-icon> Most Common Fillers Used</v-card-text>
           </div>
-          <div class="confidence">
-            <svg class="clarity" style="height: 400; width: 450;"></svg>
+          <div class="bottom-charts">
+            <div class="confidence">
+              <svg class="clarity" style="height: 400; width: 450;"></svg>
+            </div>
+
+            <div class="fillersUsed">
+              <svg class="whatFillers" style="height: 400; width: 450;"></svg>
+            </div>
+            <div class="pauses-line">
+            </div>
           </div>
 
-          <div class="fillersUsed">
-            <svg class="whatFillers" style="height: 400; width: 450;"></svg>
-          </div>
 
         </v-card>
       </v-tabs-content>
@@ -104,6 +111,7 @@ export default {
       this.renderPauses(this.items)
       this.renderClarity(this.items)
       this.renderWhatFillers(this.whatFillers)
+      this.renderPausesLine(this.items)
 
     })
 
@@ -175,7 +183,7 @@ export default {
           div.style('display', 'inline-block');
           div.html((d.title) + '<br>' + (d.number_of_fillers));
       });
-      d3.selectAll('.countFillers .bar').on('mouseout', function(d) {
+      d3.selectAll('.bar').on('mouseout', function(d) {
           div.style('display', 'none');
       });
     },
@@ -246,7 +254,7 @@ export default {
           div.style('display', 'inline-block');
           div.html((d.title) + '<br>' + (d.wpm) + "WPM");
       });
-      d3.selectAll('.bar').on('mouseout', function(d) {
+      d3.selectAll('.myWPM .bar').on('mouseout', function(d) {
           div.style('display', 'none');
       });
     },
@@ -497,10 +505,57 @@ export default {
           div.style('display', 'inline-block');
           div.html((d.name) + '<br>' + (d.fillerNum) + "%");
       });
-      d3.selectAll('.bar').on('mouseout', function(d) {
+      d3.selectAll('.fillersUsed .bar').on('mouseout', function(d) {
           div.style('display', 'none');
       });
     },
+    renderPausesLine: function(jsonData){
+      var margin = {top: 20, right: 20, bottom: 30, left: 50},
+      width = 450 - margin.left - margin.right,
+      height = 350 - margin.top - margin.bottom;
+
+      // set the ranges
+      var x = d3.scaleTime().range([0, width]);
+      var y = d3.scaleLinear().range([height, 0]);
+
+      // define the line
+      var valueline = d3.line()
+          .x(function(d) { return x(d.title); })
+          .y(function(d) { return y(d.pauses); });
+
+      // append the svg obgect to the body of the page
+      // appends a 'group' element to 'svg'
+      // moves the 'group' element to the top left margin
+      var svg = d3.select(".pauses-line").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+      // Scale the range of the data
+      x.domain(d3.extent((jsonData).map((d) => { return d.title; })));
+      y.domain([0, d3.max((jsonData).map((d) => { return d.pauses; }))]);
+
+      // Add the valueline path.
+      svg.append("path")
+          .data(jsonData)
+          .attr("class", "line")
+          .attr("d", valueline);
+
+      // Add the X Axis
+      svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x));
+
+      // Add the Y Axis
+      svg.append("g")
+          .call(d3.axisLeft(y));
+
+    }
+
 
   },
 };
@@ -607,5 +662,13 @@ export default {
   border: 1px solid #6F257F;
   padding: 14px;
   text-align: center;
+}
+.top-charts, .bottom-charts{
+  display: flex;
+}
+.line {
+  fill: none;
+  stroke: #23CE6B;
+  stroke-width: 2px;
 }
 </style>
