@@ -28,7 +28,7 @@
         </v-card-actions>
       </v-card>
     </v-layout>
-    <h2><span>{{ first_name }}'s Diary</span></h2>
+    <h6><span>{{ first_name }}'s Diary</span></h6>
 <!-- <svg class="myFillers" height="400" width="450"></svg>
 <svg class="pace" height="350" width="1250"></svg> -->
     <v-layout row>
@@ -312,7 +312,7 @@ export default {
   margin-left: 10px;
   margin-right: 0px;
 }
-h2 {
+h6 {
   width:100%;
   text-align:center;
   border-bottom: 1px solid #000;
@@ -320,8 +320,9 @@ h2 {
   margin:10px 0 20px;
   margin-top: 5%;
   margin-bottom: 5%;
+  font-size: 40px;
 }
-h2 span {
+h6 span {
   background-color: rgb(249, 249, 249);
   padding:0 10px;
 }

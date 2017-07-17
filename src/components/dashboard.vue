@@ -72,6 +72,7 @@
               <svg class="whatFillers" style="height: 400; width: 450;"></svg>
             </div>
             <div class="pauses-line">
+              <svg class="pauses-line" style="height: 400; width: 450;"></svg>
             </div>
           </div>
 
@@ -510,9 +511,10 @@ export default {
       });
     },
     renderPausesLine: function(jsonData){
-      var margin = {top: 20, right: 20, bottom: 30, left: 50},
-      width = 450 - margin.left - margin.right,
-      height = 350 - margin.top - margin.bottom;
+      var svg = d3.select(".pauses-line"),
+        margin = {top: 20, right: 20, bottom: 30, left: 50},
+        width = +svg.attr('width') - (margin.left)-(margin.right),
+        height = +svg.attr('height') - margin.top - (margin.bottom);
 
       // set the ranges
       var x = d3.scaleTime().range([0, width]);
@@ -520,20 +522,16 @@ export default {
 
       // define the line
       var valueline = d3.line()
-          .x(function(d) { return x(d.title); })
-          .y(function(d) { return y(d.pauses); });
+          .x((jsonData).map((d) => { return d.title; }))
+          .y((jsonData).map((d) => { return d.pauses; }));
 
       // append the svg obgect to the body of the page
       // appends a 'group' element to 'svg'
       // moves the 'group' element to the top left margin
-      var svg = d3.select(".pauses-line").append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-          .attr("transform",
-                "translate(" + margin.left + "," + margin.top + ")");
 
-
+      const g = svg.append('g')
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
 
       // Scale the range of the data
       x.domain(d3.extent((jsonData).map((d) => { return d.title; })));
