@@ -49,7 +49,7 @@
           </div>
           <div class="top-charts">
             <div class="countFillers">
-              <svg class="fillers" style="height: 350; width: 450;"></svg>
+              <svg class="fillers" style="height: 400; width: 450;"></svg>
             </div>
             <div class="myWPM">
               <svg class="wpm" style="height: 350; width: 450;"></svg>
@@ -69,11 +69,11 @@
             </div>
 
             <div class="fillersUsed">
-              <svg class="whatFillers" style="height: 400; width: 450;"></svg>
+              <svg id="totalFillers" class="whatFillers" style="height: 500; width: 950;"></svg>
             </div>
-            <div class="pauses-line">
+            <!-- <div class="pauses-line">
               <svg id="pauses-line" class="pauses-line" style="height: 400; width: 450;"></svg>
-            </div>
+            </div> -->
           </div>
 
 
@@ -111,8 +111,9 @@ export default {
       this.renderWpm(this.items)
       this.renderPauses(this.items)
       this.renderClarity(this.items)
-      this.renderWhatFillers(this.whatFillers)
-      this.renderPausesLine(this.items)
+      // this.renderWhatFillers(this.whatFillers)
+      // this.renderPausesLine(this.items)
+      this.renderHorizontal(this.whatFillers)
 
     })
 
@@ -142,6 +143,25 @@ export default {
       //     .attr('class', 'axis axis--x')
       //     .attr('transform', 'translate(0,' + height + ')')
       //     .call(d3.axisBottom(x));
+
+      // add the x Axis
+        // g.append("g")
+        //     .attr("transform", "translate(0," + height + ")")
+        //     .call(d3.axisBottom(x))
+
+
+
+        // Add the X Axis
+        g.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x).ticks(10))
+      .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-65)");
+
       g.append('g')
           .attr('class', 'axis axis--y')
           .call(d3.axisLeft(y).ticks(10))
@@ -213,6 +233,17 @@ export default {
       //     .attr('class', 'axis axis--x')
       //     .attr('transform', 'translate(0,' + height + ')')
       //     .call(d3.axisBottom(x));
+
+      // Add the X Axis
+      g.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x).ticks(10))
+      .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-65)");
       g.append('g')
           .attr('class', 'axis axis--y')
           .call(d3.axisLeft(y).ticks(10))
@@ -284,6 +315,17 @@ export default {
       //     .attr('class', 'axis axis--x')
       //     .attr('transform', 'translate(0,' + height + ')')
       //     .call(d3.axisBottom(x));
+      // Add the X Axis
+      g.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x).ticks(10))
+      .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-65)");
+
       g.append('g')
           .attr('class', 'axis axis--y')
           .call(d3.axisLeft(y).ticks(10))
@@ -355,6 +397,17 @@ export default {
       //     .attr('class', 'axis axis--x')
       //     .attr('transform', 'translate(0,' + height + ')')
       //     .call(d3.axisBottom(x));
+
+      // Add the X Axis
+      g.append("g")
+          .attr("class", "axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x).ticks(10))
+          .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
       g.append('g')
           .attr('class', 'axis axis--y')
           .call(d3.axisLeft(y).ticks(5))
@@ -464,6 +517,17 @@ export default {
       //     .attr('class', 'axis axis--x')
       //     .attr('transform', 'translate(0,' + height + ')')
       //     .call(d3.axisBottom(x));
+
+      // Add the X Axis
+      g.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x).ticks(10))
+        .selectAll("text")
+          .style("text-anchor", "end")
+          .attr("dx", "-.8em")
+          .attr("dy", ".15em")
+          .attr("transform", "rotate(-65)");
       g.append('g')
           .attr('class', 'axis axis--y')
           .call(d3.axisLeft(y).ticks(5))
@@ -546,10 +610,21 @@ export default {
           .attr("class", "line")
           .attr("d", valueline)
 
-      // Add the X Axis
+
+          // Add the X Axis
       g.append("g")
-          .attr("transform", "translate(0," + height + ")")
-          .call(d3.axisBottom(x));
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+          .style("text-anchor", "end")
+          .attr("dx", "-.8em")
+          .attr("dy", ".15em")
+          .attr("transform", "rotate(-65)");
+      // // Add the X Axis
+      // g.append("g")
+      //     .attr("transform", "translate(0," + height + ")")
+      //     .call(d3.axisBottom(x));
 
 
       // Add the Y Axis
@@ -558,8 +633,56 @@ export default {
 
 
 
-    }
+    },
+    renderHorizontal: function(jsonData){
+      var svg = d3.select("svg.whatFillers"),
+      margin = {top: 20, right: 10, bottom: 30, left: 50},
+      width = +document.getElementById('totalFillers').style.width.slice(0, -2) - (margin.left*2)-(margin.right*2),
+      height = +document.getElementById('totalFillers').style.height.slice(0, -2) - margin.top*4 - (margin.bottom*4);
+      // width = svg.attr("width") + margin.left*8 + margin.right*8,
+      // height = svg.attr("height") + margin.top*5 + margin.bottom*5;
 
+      var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
+      var x = d3.scaleLinear().range([0, width]);
+      var y = d3.scaleBand().range([height, 0]);
+
+      var g = svg.append("g")
+      		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      x.domain([0, 70]);
+      //y.domain([0, d3.max(dri, (d) => { return d.value; console.log(d.value) })]);
+      y.domain(jsonData.map(function(d) { return d.name; })).padding(0.1);
+
+      g.append("g")
+        .attr("class", "x axis")
+       	.attr("transform", "translate(0," + height + ")")
+      	.call(d3.axisBottom(x).ticks(10).tickFormat(function(d) {return d + "%" }).tickSizeInner([-height]));
+
+      g.append("g")
+          .attr("class", "y axis")
+          .call(d3.axisLeft(y));
+
+      g.selectAll(".fillers .bar")
+        .data(this.whatFillers)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", 0)
+        .attr("height", y.bandwidth())
+        .transition()
+        .duration(2000)
+        .attr("y", function(d) { return y(d.name); })
+        .attr("width", function(d) { return x(+d.fillerNum); })
+        .on("mousemove", function(d){
+          tooltip
+            .style("left", d3.event.pageX - 50 + "px")
+            .style("top", d3.event.pageY - 70 + "px")
+            .style("display", "inline-block")
+            .html((d.name) + "<br>"  + (+d.fillerNum));
+        })
+      	.on("mouseout", function(d){ tooltip.style("display", "none");});
+
+    },
 
   },
 };
