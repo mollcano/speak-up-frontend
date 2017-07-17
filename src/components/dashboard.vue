@@ -72,7 +72,7 @@
               <svg class="whatFillers" style="height: 400; width: 450;"></svg>
             </div>
             <div class="pauses-line">
-              <svg class="pauses-line" style="height: 400; width: 450;"></svg>
+              <svg id="pauses-line" class="pauses-line" style="height: 400; width: 450;"></svg>
             </div>
           </div>
 
@@ -184,7 +184,7 @@ export default {
           div.style('display', 'inline-block');
           div.html((d.title) + '<br>' + (d.number_of_fillers));
       });
-      d3.selectAll('.bar').on('mouseout', function(d) {
+      d3.selectAll('.countFillers .bar').on('mouseout', function(d) {
           div.style('display', 'none');
       });
     },
@@ -326,7 +326,7 @@ export default {
           div.style('display', 'inline-block');
           div.html((d.title) + '<br>' + (d.pauses));
       });
-      d3.selectAll('.bar').on('mouseout', function(d) {
+      d3.selectAll('.myPauses .bar').on('mouseout', function(d) {
           div.style('display', 'none');
       });
     },
@@ -397,7 +397,7 @@ export default {
           div.style('display', 'inline-block');
           div.html((d.title) + '<br>' + (d.confidence));
       });
-      d3.selectAll('.bar').on('mouseout', function(d) {
+      d3.selectAll('.confidence .bar').on('mouseout', function(d) {
           div.style('display', 'none');
       });
     },
@@ -511,19 +511,20 @@ export default {
       });
     },
     renderPausesLine: function(jsonData){
-      var svg = d3.select(".pauses-line"),
-        margin = {top: 20, right: 20, bottom: 30, left: 50},
-        width = +svg.attr('width') - (margin.left)-(margin.right),
-        height = +svg.attr('height') - margin.top - (margin.bottom);
 
+      var svg = d3.select("svg.pauses-line"),
+        margin = {top: 20, right: 20, bottom: 30, left: 50},
+        width = +document.getElementById('pauses-line').style.width.slice(0, -2) - (margin.left*2)-(margin.right*2),
+        height = +document.getElementById('pauses-line').style.height.slice(0, -2) - margin.top - (margin.bottom*5);
+        console.log(jsonData);
       // set the ranges
-      var x = d3.scaleTime().range([0, width]);
+      var x = d3.scaleBand().rangeRound([0, width]).padding(0.1)
       var y = d3.scaleLinear().range([height, 0]);
 
       // define the line
       var valueline = d3.line()
-          .x((jsonData).map((d) => { return d.title; }))
-          .y((jsonData).map((d) => { return d.pauses; }));
+          .x((d) => { return x(d.title); })
+          .y((d) => { return y(+d.pauses); });
 
       // append the svg obgect to the body of the page
       // appends a 'group' element to 'svg'
@@ -533,24 +534,29 @@ export default {
         .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")");
 
+
       // Scale the range of the data
-      x.domain(d3.extent((jsonData).map((d) => { return d.title; })));
-      y.domain([0, d3.max((jsonData).map((d) => { return d.pauses; }))]);
+      x.domain(jsonData.map((d) => { return d.title; }));
+      y.domain([0, d3.max(jsonData, (d) => { return (+d.pauses); })]);
+
 
       // Add the valueline path.
-      svg.append("path")
-          .data(jsonData)
+      g.append("path")
+          .data([jsonData])
           .attr("class", "line")
-          .attr("d", valueline);
+          .attr("d", valueline)
 
       // Add the X Axis
-      svg.append("g")
+      g.append("g")
           .attr("transform", "translate(0," + height + ")")
           .call(d3.axisBottom(x));
 
+
       // Add the Y Axis
-      svg.append("g")
+      g.append("g")
           .call(d3.axisLeft(y));
+
+
 
     }
 

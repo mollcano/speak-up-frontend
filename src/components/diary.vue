@@ -164,13 +164,13 @@ export default {
       g.append("g")
         .attr("class", "x axis")
        	.attr("transform", "translate(0," + height + ")")
-      	.call(d3.axisBottom(x).ticks(10).tickFormat(function(d) {return d*10 + "%" }).tickSizeInner([-height]));
+      	.call(d3.axisBottom(x).ticks(10).tickFormat(function(d) {return d }).tickSizeInner([-height]));
 
       g.append("g")
           .attr("class", "y axis")
           .call(d3.axisLeft(y));
 
-      g.selectAll(".bar")
+      g.selectAll(".fillers .bar")
         .data(this.fillers)
         .enter().append("rect")
         .attr("class", "bar")
@@ -233,7 +233,7 @@ export default {
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
           .attr('transform', 'translate(' + (width / 2) + ',' + (height + margin.bottom) + ')') // centre below axis
-      g.selectAll('.bar')
+      g.selectAll('.pacing .bar')
           .data(jsonData)
           .enter().append('rect')
           .attr('class', 'bar')
@@ -253,13 +253,13 @@ export default {
           .attr('height', (d) => {
               return height - y(d.part);
           });
-      d3.selectAll('.bar').on('mousemove', function(d) {
+      d3.selectAll('.pacing .bar').on('mousemove', function(d) {
           div.style('left', d3.event.pageX + 10 + 'px');
           div.style('top', d3.event.pageY - 25 + 'px');
           div.style('display', 'inline-block');
           div.html((d.name) + '<br>' + (d.part + "wpm"));
       });
-      d3.selectAll('.bar').on('mouseout', function(d) {
+      d3.selectAll('.pacing .bar').on('mouseout', function(d) {
           div.style('display', 'none');
       });
     },
