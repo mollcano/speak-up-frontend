@@ -11,3 +11,4 @@ src/auth/*.js
 src/highlight/highlight.js
 src/App.vue
 src/graph.js
+src/components/linechart.js

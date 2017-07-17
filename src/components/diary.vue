@@ -1,6 +1,6 @@
 <template>
   <div class="diary">
-    <button id="presentation-btn" type="button" name="button" v-on:click="seen = !seen">Submit a New Presentation</button>
+    <button id="presentation-btn" type="button" v-on:click="seen = !seen">Submit a New Presentation</button>
 
     <v-layout class="mb-3" column align-center v-if="seen">
       <v-card class="mt-3"align-center>
@@ -29,6 +29,7 @@
       </v-card>
     </v-layout>
     <h2><span>{{ first_name }}'s Diary</span></h2>
+
     <v-layout row>
     <v-flex xs12 sm12>
       <v-card class="mb-5" v-for="item in items" :key="item" v-bind:value="item === 2">
@@ -53,12 +54,9 @@
               <v-icon fa class="icons">glass</v-icon> <h3 class="conf-title">Clarity</h3><input type="range" min="0" max="1" step="0.1" :value="item.confidence" class="range-bar"/><h3 class="conf-val">{{ item.confidence }}</h3>
             </div>
             <div class="fillers">
-              
+              <svg class="myFillers" style="height: 400; width: 450;"></svg>
 
             </div>
-
-
-
           </v-card-text>
         </v-slide-y-transition>
       </v-card>
@@ -71,8 +69,10 @@
 import watson from '../watson/watson';
 import auth from '../auth/auth';
 
+
 export default {
   data() {
+
     return {
       seen: false,
       show: false,
@@ -94,6 +94,8 @@ export default {
       for (var i=(data.body.length)-1; i>=0; i--){
         this.items.push(data.body[i])
       }
+      this.renderMyFillers(this.items)
+
     })
   },
   methods: {
@@ -122,7 +124,77 @@ export default {
       });
       this.seen = false;
     },
-
+    renderMyFillers: function(jsonData) {
+      const svg = d3.select('svg.myFillers'),
+          margin = {
+              top: 30,
+              right: 20,
+              bottom: 30,
+              left: 80
+          },
+          width = +svg.attr('width') + (margin.left*3)+(margin.right*3),
+          height = +svg.attr('height') + margin.top + (margin.bottom * 7);
+      let div = d3.select('body').append('div').attr('class', 'toolTip');
+      const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
+      const y = d3.scaleLinear().rangeRound([height, 0]);
+      const g = svg.append('g')
+          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+      x.domain((jsonData).map((d) => {
+          return d.title;
+      }));
+      //y.domain([0, d3.max(dri, (d) => { return d.value; console.log(d.value) })]);
+      y.domain([0, 8]);
+      // g.append('g')
+      //     .attr('class', 'axis axis--x')
+      //     .attr('transform', 'translate(0,' + height + ')')
+      //     .call(d3.axisBottom(x));
+      g.append('g')
+          .attr('class', 'axis axis--y')
+          .call(d3.axisLeft(y).ticks(10))
+          .append('text')
+          .attr('transform', 'rotate(-90)')
+          .attr('y', 6)
+          .attr('dy', '0.71em')
+          .attr('text-anchor', 'end')
+          // .text('Frequency');
+      g.append('text')
+          .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
+          .attr('transform', 'translate(-' + (margin.left / 2) + ',' + (height / 2) + ')rotate(-90)') // text is drawn off the screen top left, move down and out and rotate
+          .text('Num of Fillers');
+      g.append('text')
+          .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
+          .attr('transform', 'translate(' + (width / 2) + ',' + (height + margin.bottom) + ')') // centre below axis
+          .text('Speeches');
+      g.selectAll('.bar')
+          .data(jsonData)
+          .enter().append('rect')
+          .attr('class', 'bar')
+          .attr('x', (d) => {
+              return x(d.title);
+          })
+          //.attr('y', (d) => { return y(d.value); })
+          .attr('y', (d) => {
+              return height;
+          })
+          .attr('width', x.bandwidth())
+          .transition()
+          .duration(4000)
+          .attr('y', (d) => {
+              return y(d.number_of_fillers);
+          })
+          .attr('height', (d) => {
+              return height - y(d.number_of_fillers);
+          });
+      d3.selectAll('.bar').on('mousemove', function(d) {
+          div.style('left', d3.event.pageX + 10 + 'px');
+          div.style('top', d3.event.pageY - 25 + 'px');
+          div.style('display', 'inline-block');
+          div.html((d.title) + '<br>' + (d.number_of_fillers));
+      });
+      d3.selectAll('.bar').on('mouseout', function(d) {
+          div.style('display', 'none');
+      });
+    },
   },
 };
 </script>
@@ -142,10 +214,10 @@ export default {
   font-size: 300%;
   color: #FAFAFA;
   border-style: outset;
+  outline: none;
 }
-*, :after, :before{
-  box-sizing: initial;
-}
+
+
 #hidden{
   display: none;
   background-color: #433A3F;
