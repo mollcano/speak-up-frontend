@@ -47,15 +47,28 @@
             <v-card-text class="middle-title"><v-icon fa class="icons">clock-o</v-icon> WPM</v-card-text>
             <v-card-text class="rightmost-title"><v-icon fa class="icons">pause</v-icon> Pauses</v-card-text>
           </div>
-          <svg class="fillers" style="height: 350; width: 450;"></svg>
-          <svg class="wpm" style="height: 350; width: 450;"></svg>
-          <svg class="pauses" style="height: 350; width: 450;"></svg>
+          <div class="countFillers">
+            <svg class="fillers" style="height: 350; width: 450;"></svg>
+          </div>
+          <div class="myWPM">
+            <svg class="wpm" style="height: 350; width: 450;"></svg>
+          </div>
+
+          <div class="myPauses">
+            <svg class="pauses" style="height: 350; width: 450;"></svg>
+          </div>
           <div class="chart-titles">
             <v-card-text class="leftmost-titles"><v-icon fa class="icons">glass</v-icon> Clarity</v-card-text>
             <v-card-text><v-icon fa class="icons">quote-left</v-icon> Most Common Fillers Used</v-card-text>
           </div>
-          <svg class="clarity" style="height: 400; width: 450;"></svg>
-          <svg class="whatFillers" style="height: 400; width: 450;"></svg>
+          <div class="confidence">
+            <svg class="clarity" style="height: 400; width: 450;"></svg>
+          </div>
+
+          <div class="fillersUsed">
+            <svg class="whatFillers" style="height: 400; width: 450;"></svg>
+          </div>
+
         </v-card>
       </v-tabs-content>
     </v-tabs>
@@ -136,8 +149,7 @@ export default {
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
           .attr('transform', 'translate(' + (width / 2) + ',' + (height + margin.bottom) + ')') // centre below axis
-          .text('Speeches');
-      g.selectAll('.bar')
+      g.selectAll('.countFillers .bar')
           .data(jsonData)
           .enter().append('rect')
           .attr('class', 'bar')
@@ -157,13 +169,13 @@ export default {
           .attr('height', (d) => {
               return height - y(d.number_of_fillers);
           });
-      d3.selectAll('.bar').on('mousemove', function(d) {
+      d3.selectAll('.countFillers .bar').on('mousemove', function(d) {
           div.style('left', d3.event.pageX + 10 + 'px');
           div.style('top', d3.event.pageY - 25 + 'px');
           div.style('display', 'inline-block');
           div.html((d.title) + '<br>' + (d.number_of_fillers));
       });
-      d3.selectAll('.bar').on('mouseout', function(d) {
+      d3.selectAll('.countFillers .bar').on('mouseout', function(d) {
           div.style('display', 'none');
       });
     },
@@ -208,8 +220,7 @@ export default {
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
           .attr('transform', 'translate(' + (width / 2) + ',' + (height + margin.bottom) + ')') // centre below axis
-          .text('Speeches');
-      g.selectAll('.bar')
+      g.selectAll('.myWPM .bar')
           .data(jsonData)
           .enter().append('rect')
           .attr('class', 'bar')
@@ -229,11 +240,11 @@ export default {
           .attr('height', (d) => {
               return height - y(d.wpm);
           });
-      d3.selectAll('.bar').on('mousemove', function(d) {
+      d3.selectAll('.myWPM .bar').on('mousemove', function(d) {
           div.style('left', d3.event.pageX + 10 + 'px');
           div.style('top', d3.event.pageY - 25 + 'px');
           div.style('display', 'inline-block');
-          div.html((d.title) + '<br>' + (d.wpm));
+          div.html((d.title) + '<br>' + (d.wpm) + "WPM");
       });
       d3.selectAll('.bar').on('mouseout', function(d) {
           div.style('display', 'none');
@@ -280,8 +291,7 @@ export default {
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
           .attr('transform', 'translate(' + (width / 2) + ',' + (height + margin.bottom) + ')') // centre below axis
-          .text('Speeches');
-      g.selectAll('.bar')
+      g.selectAll('.myPauses .bar')
           .data(jsonData)
           .enter().append('rect')
           .attr('class', 'bar')
@@ -301,7 +311,7 @@ export default {
           .attr('height', (d) => {
               return height - y(d.pauses);
           });
-      d3.selectAll('.bar').on('mousemove', function(d) {
+      d3.selectAll('.myPauses .bar').on('mousemove', function(d) {
           div.style('left', d3.event.pageX + 10 + 'px');
           div.style('top', d3.event.pageY - 25 + 'px');
           div.style('display', 'inline-block');
@@ -352,8 +362,7 @@ export default {
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
           .attr('transform', 'translate(' + (width / 2) + ',' + (height + margin.bottom) + ')') // centre below axis
-          .text('Speeches');
-      g.selectAll('.bar')
+      g.selectAll('.confidence .bar')
           .data(jsonData)
           .enter().append('rect')
           .attr('class', 'bar')
@@ -373,7 +382,7 @@ export default {
           .attr('height', (d) => {
               return height - y(d.confidence);
           });
-      d3.selectAll('.bar').on('mousemove', function(d) {
+      d3.selectAll('.confidence .bar').on('mousemove', function(d) {
           div.style('left', d3.event.pageX + 10 + 'px');
           div.style('top', d3.event.pageY - 25 + 'px');
           div.style('display', 'inline-block');
@@ -462,8 +471,7 @@ export default {
       g.append('text')
           .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
           .attr('transform', 'translate(' + (width / 2) + ',' + (height + margin.bottom) + ')') // centre below axis
-          .text('Speeches');
-      g.selectAll('.bar')
+      g.selectAll('.fillersUsed .bar')
           .data(this.whatFillers)
           .enter().append('rect')
           .attr('class', 'bar')
@@ -483,11 +491,11 @@ export default {
           .attr('height', (d) => {
               return height - y(d.fillerNum);
           });
-      d3.selectAll('.bar').on('mousemove', function(d) {
+      d3.selectAll('.fillersUsed .bar').on('mousemove', function(d) {
           div.style('left', d3.event.pageX + 10 + 'px');
           div.style('top', d3.event.pageY - 25 + 'px');
           div.style('display', 'inline-block');
-          div.html((d.name) + '<br>' + (d.fillerNum));
+          div.html((d.name) + '<br>' + (d.fillerNum) + "%");
       });
       d3.selectAll('.bar').on('mouseout', function(d) {
           div.style('display', 'none');
@@ -534,9 +542,6 @@ export default {
 .right-side{
   width: 50%;
 }
-.bar {
-  fill: #42C3DD;
-}
 .tab-title{
   font-size: 23px;
 }
@@ -579,5 +584,28 @@ export default {
 }
 .bld {
     font-weight: bold;
+}
+.bar {
+	fill: #42C3DD;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #D4D8DA;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+}
+.x path {
+	display: none;
+}
+.toolTip {
+	position: absolute;
+  display: none;
+  min-width: 80px;
+  height: auto;
+  background: none repeat scroll 0 0 #ffffff;
+  border: 1px solid #6F257F;
+  padding: 14px;
+  text-align: center;
 }
 </style>

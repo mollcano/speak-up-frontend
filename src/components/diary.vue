@@ -55,11 +55,12 @@
               <v-icon fa class="icons">glass</v-icon> <h3 class="conf-title">Clarity</h3><input type="range" min="0" max="1" step="0.1" :value="item.confidence" class="range-bar"/><h3 class="conf-val">{{ item.confidence }}</h3>
             </div>
             <div class="fillers">
-              <v-icon fa class="icons">commenting-o</v-icon> <h3 class="fillers-title">Fillers</h3><svg :id="item.id+'myFillers'" class="myFillers" height="400" width="450"></svg>
+              <v-icon fa class="icons">commenting-o</v-icon> <h3 class="fillers-title">Fillers</h3><svg :id="item.id+'myFillers'" class="myFillers" height="400" width="850"></svg>
             </div>
             <div class="pacing">
               <v-icon fa class="icons">fast-forward</v-icon> <h3 class="pace-title">Pace</h3><svg class="pace" height="400" width="850"></svg>
             </div>
+
           </v-card-text>
         </v-slide-y-transition>
       </v-card>
@@ -86,7 +87,7 @@ export default {
       error: '',
       items: [],
       fillers: [{ "name": "um, uh, hmm", "fillerNum": 7 }, { "name": "so", "fillerNum": 5 }, { "name": "like", "fillerNum": 2 }, { "name": "you know", "fillerNum": 0 }, { "name": "well", "fillerNum": 0 }, { "name": "actually", "fillerNum": 0 }, { "name": "basically", "fillerNum": 1 }, { "name": "I mean", "fillerNum": 0 }],
-      pace:  [ { "name": "part1", "part": 111.842804036113 }, { "name": "part2", "part": 254.91237387148172 }, { "name": "part3", "part": 159.32023366967607 }, { "name": "part4", "part": 286.77642060541694 }, { "name": "part4", "part": 286.77642060541694 }, { "name": "part5", "part": 318.64046733935214 }, { "name": "part6", "part": 191.1842804036113 }, { "name": "part7", "part": 191.1842804036113 }, { "name": "part8", "part": 95.59214020180565 }, { "name": "part9", "part": 31.864046733935215 }, { "name": "part10", "part": 31.864046733935215 } ],
+      pace:  [ { "name": "part1", "part": 111.84 }, { "name": "part2", "part": 254.91 }, { "name": "part3", "part": 159.32 }, { "name": "part4", "part": 286.77 }, { "name": "part4", "part": 286.77 }, { "name": "part5", "part": 318.64 }, { "name": "part6", "part": 191.18 }, { "name": "part7", "part": 191.18 }, { "name": "part8", "part": 95.59 }, { "name": "part9", "part": 31.86 }, { "name": "part10", "part": 31.86 } ],
       first_name: auth.user.first_name,
       last_name: auth.user.last_name,
     };
@@ -95,8 +96,8 @@ export default {
     show: {
       handler(val, oldval){
         console.log(this.show)
-        this.renderMyFillers(this.fillers)
         this.renderpace(this.pace)
+        this.renderHorizontal(this.fillers)
       },
       deep: true
     }
@@ -142,81 +143,54 @@ export default {
       });
       this.seen = false;
     },
-    renderMyFillers: function(jsonData, id) {
-      console.log("hello yo");
-      // console.log(d3.select('svg.myFillers').attr('width'), "width")
-      // const svg = d3.select('#' + this.items.id + "myFillers"),
-      const svg = d3.select('svg.myFillers'),
-          margin = {
-              top: 30,
-              right: 20,
-              bottom: 30,
-              left: 80
-          },
-          width = +svg.attr('width') + (margin.left)+(margin.right),
-          height = +svg.attr('height') - margin.top - (margin.bottom);
-      let div = d3.select('body').append('div').attr('class', 'toolTip');
-      const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
-      const y = d3.scaleLinear().rangeRound([height, 0]);
-      const g = svg.append('g')
-          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+    renderHorizontal: function(jsonData){
+      var svg = d3.select("svg.myFillers"),
+      margin = {top: 20, right: 20, bottom: 30, left: 80},
+      width = +svg.attr("width") - margin.left - margin.right,
+      height = +svg.attr("height") - margin.top - margin.bottom;
 
-      x.domain((jsonData).map((d) => {
-        console.log(d.name, "filler name")
-        console.log(d.fillerNum, "fillernum")
-          return d.name;
-      }));
+      var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
+      var x = d3.scaleLinear().range([0, width]);
+      var y = d3.scaleBand().range([height, 0]);
+
+      var g = svg.append("g")
+      		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      x.domain([0, d3.max(jsonData, function(d) { return d.fillerNum; })]);
       //y.domain([0, d3.max(dri, (d) => { return d.value; console.log(d.value) })]);
-      y.domain([0, 10]);
-      // g.append('g')
-      //     .attr('class', 'axis axis--x')
-      //     .attr('transform', 'translate(0,' + height + ')')
-      //     .call(d3.axisBottom(x));
-      g.append('g')
-          .attr('class', 'axis axis--y')
-          .call(d3.axisLeft(y).ticks(10))
-          .append('text')
-          .attr('transform', 'rotate(-90)')
-          .attr('y', 6)
-          .attr('dy', '0.71em')
-          .attr('text-anchor', 'end')
-          // .text('Frequency');
-      g.append('text')
-          .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
-          .attr('transform', 'translate(-' + (margin.left / 2) + ',' + (height / 2) + ')rotate(-90)') // text is drawn off the screen top left, move down and out and rotate
-      g.append('text')
-          .attr('text-anchor', 'middle') // this makes it easy to centre the text as the transform is applied to the anchor
-          .attr('transform', 'translate(' + (width / 2) + ',' + (height + margin.bottom) + ')') // centre below axis
-      g.selectAll('.bar')
-          .data(jsonData)
-          .enter().append('rect')
-          .attr('class', 'bar')
-          .attr('x', (d) => {
-              return x(d.name);
-          })
-          //.attr('y', (d) => { return y(d.value); })
-          .attr('y', (d) => {
-              return height;
-          })
-          .attr('width', x.bandwidth())
-          .transition()
-          .duration(2000)
-          .attr('y', (d) => {
-              return y(d.fillerNum);
-          })
-          .attr('height', (d) => {
-              return height - y(d.fillerNum);
-          });
-      d3.selectAll('.bar').on('mousemove', function(d) {
-          div.style('left', d3.event.pageX + 10 + 'px');
-          div.style('top', d3.event.pageY - 25 + 'px');
-          div.style('display', 'inline-block');
-          div.html((d.name) + '<br>' + (d.fillerNum));
-      });
-      d3.selectAll('.bar').on('mouseout', function(d) {
-          div.style('display', 'none');
-      });
+      y.domain(jsonData.map(function(d) { return d.name; })).padding(0.1);
+
+      g.append("g")
+        .attr("class", "x axis")
+       	.attr("transform", "translate(0," + height + ")")
+      	.call(d3.axisBottom(x).ticks(10).tickFormat(function(d) {return d*10 + "%" }).tickSizeInner([-height]));
+
+      g.append("g")
+          .attr("class", "y axis")
+          .call(d3.axisLeft(y));
+
+      g.selectAll(".bar")
+        .data(this.fillers)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", 0)
+        .attr("height", y.bandwidth())
+        .transition()
+        .duration(2000)
+        .attr("y", function(d) { return y(d.name); })
+        .attr("width", function(d) { return x(d.fillerNum); })
+        .on("mousemove", function(d){
+          tooltip
+            .style("left", d3.event.pageX - 50 + "px")
+            .style("top", d3.event.pageY - 70 + "px")
+            .style("display", "inline-block")
+            .html((d.name) + "<br>"  + (d.fillerNum));
+        })
+      	.on("mouseout", function(d){ tooltip.style("display", "none");});
+
     },
+
     renderpace: function(jsonData) {
       console.log("hello yo");
       console.log(d3.select('svg.pace').attr('width'), "width")
@@ -283,7 +257,7 @@ export default {
           div.style('left', d3.event.pageX + 10 + 'px');
           div.style('top', d3.event.pageY - 25 + 'px');
           div.style('display', 'inline-block');
-          div.html((d.name) + '<br>' + (d.part));
+          div.html((d.name) + '<br>' + (d.part + "wpm"));
       });
       d3.selectAll('.bar').on('mouseout', function(d) {
           div.style('display', 'none');
@@ -298,7 +272,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
 .diary {
   font-family: 'Open Sans', sans-serif;
 }
@@ -457,32 +431,27 @@ input[type=range]:focus::-ms-fill-upper {
   display: inline;
 }
 .bar {
-    fill: #42C3DD;
+	fill: #42C3DD;
 }
-.bar:hover {
-    fill: brown;
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #D4D8DA;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
 }
-.axis--x path {
-    display: none;
+.x path {
+	display: none;
 }
 .toolTip {
-    position: absolute;
-    display: none;
-    width: auto;
-    height: auto;
-    background: none repeat scroll 0 0 white;
-    border: 0 none;
-    border-radius: 8px 8px 8px 8px;
-    box-shadow: -3px 3px 15px #888888;
-    color: black;
-    font: 12px sans-serif;
-    padding: 5px;
-    text-align: center;
-    z-index: 10;
-}
-label {
-    color: white;
-    font-weight: lighter;
+	position: absolute;
+  display: none;
+  min-width: 80px;
+  height: auto;
+  background: none repeat scroll 0 0 #ffffff;
+  border: 1px solid #6F257F;
+  padding: 14px;
+  text-align: center;
 }
 
 
