@@ -47,7 +47,7 @@ export default {
       this.myUser.authenticated = true
 
       if (redirect) {
-        router.go(redirect)
+        router.replace(redirect + data.body.id)
       }
 
     }).error((err) => {
