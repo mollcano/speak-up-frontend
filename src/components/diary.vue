@@ -38,7 +38,7 @@
           <div>
             <div class="headline">{{ item.title }}</div>
             <span class="grey--text"><v-icon dark class="date-icon">date_range</v-icon>
-            {{ item.date }}
+            {{ ((item.date).slice(0, 10)) }}
             <v-icon dark class="timer-icon">timer</v-icon>
             {{ item.length_of_audio }}</span>
           </div>
@@ -105,7 +105,7 @@ export default {
   created: function() {
     var self = this
     console.log(auth.user)
-    this.$http.get('http://localhost:3000/audio/' + auth.user.id)
+    this.$http.get('https://speak-up-backend.herokuapp.com/audio/' + auth.user.id)
     .then(data => {
       var show = {}
       for (var i=(data.body.length)-1; i>=0; i--){

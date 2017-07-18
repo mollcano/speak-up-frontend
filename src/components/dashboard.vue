@@ -102,7 +102,7 @@ export default {
   },
   created: function() {
     var self = this
-    this.$http.get('http://localhost:3000/audio/' + auth.user.id)
+    this.$http.get('https://speak-up-backend.herokuapp.com/audio/' + auth.user.id)
     .then(data => {
       for (var i=0; i<data.body.length; i++){
         this.items===this.items.push(data.body[i])
@@ -637,7 +637,7 @@ export default {
     },
     renderHorizontal: function(jsonData){
       var svg = d3.select("svg.whatFillers"),
-      margin = {top: 20, right: 10, bottom: 30, left: 50},
+      margin = {top: 20, right: 10, bottom: 30, left: 70},
       width = +document.getElementById('totalFillers').style.width.slice(0, -2) - (margin.left*2)-(margin.right*2),
       height = +document.getElementById('totalFillers').style.height.slice(0, -2) - margin.top*4 - (margin.bottom*4);
       // width = svg.attr("width") + margin.left*8 + margin.right*8,
