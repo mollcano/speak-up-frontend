@@ -49,19 +49,19 @@
           </div>
           <div class="top-charts">
             <div class="countFillers">
-              <svg class="fillers" style="height: 400; width: 450;"></svg>
+              <svg class="fillers-values" style="height: 400; width: 450;"></svg>
             </div>
             <div class="myWPM">
-              <svg class="wpm" style="height: 350; width: 450;"></svg>
+              <svg id="wpm" class="wpm" style="height: 400; width: 450;"></svg>
             </div>
             <div class="myPauses">
-              <svg class="pauses" style="height: 350; width: 450;"></svg>
+              <svg class="pauses" style="height: 400; width: 450;"></svg>
             </div>
           </div>
 
           <div class="chart-titles">
             <v-card-text class="leftmost-titles"><v-icon fa class="icons">glass</v-icon> Clarity</v-card-text>
-            <v-card-text><v-icon fa class="icons">quote-left</v-icon> Most Common Fillers Used</v-card-text>
+            <v-card-text class="fillers-title"><v-icon fa class="icons">quote-left</v-icon> Most Common Fillers Used</v-card-text>
           </div>
           <div class="bottom-charts">
             <div class="confidence">
@@ -114,13 +114,14 @@ export default {
       // this.renderWhatFillers(this.whatFillers)
       // this.renderPausesLine(this.items)
       this.renderHorizontal(this.whatFillers)
+      // this.renderPie()
 
     })
 
   },
   methods: {
     renderFillers: function(jsonData) {
-      const svg = d3.select('svg.fillers'),
+      const svg = d3.select('svg.fillers-values'),
           margin = {
               top: 30,
               right: 20,
@@ -684,7 +685,7 @@ export default {
 
     },
 
-  },
+  }
 };
 </script>
 
@@ -741,6 +742,9 @@ export default {
   margin-right: 0;
   margin-left: 10%;
 }
+.fillers-title{
+  margin-right: 10%;
+}
 .icons{
   font-size: 150%;
 }
@@ -767,9 +771,22 @@ export default {
 .bld {
     font-weight: bold;
 }
-.bar {
-	fill: #42C3DD;
+.fillers-values .bar {
+  fill: #DD7373;
 }
+.wpm .bar{
+  fill: #42C3DD;
+}
+.pauses .bar{
+  fill: #23CE6B;
+}
+.confidence .bar{
+  fill: #4DD6B6;
+}
+.whatFillers .bar{
+  fill: #DD7373;
+}
+
 .axis path,
 .axis line {
   fill: none;
@@ -793,9 +810,9 @@ export default {
 .top-charts, .bottom-charts{
   display: flex;
 }
-.line {
+/*.line {
   fill: none;
   stroke: #23CE6B;
   stroke-width: 2px;
-}
+}*/
 </style>
