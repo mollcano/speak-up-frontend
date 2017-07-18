@@ -671,7 +671,7 @@ export default {
         .attr("x", 0)
         .attr("height", y.bandwidth())
         .transition()
-        .duration(2000)
+        .duration(4000)
         .attr("y", function(d) { return y(d.name); })
         .attr("width", function(d) { return x(+d.fillerNum); })
         .on("mousemove", function(d){

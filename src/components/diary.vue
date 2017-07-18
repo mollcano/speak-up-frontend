@@ -1,5 +1,7 @@
 <template>
   <div class="diary">
+    <h6 class="perfect"><span>Speak Up to Make Perfect</span></h6>
+    <br>
     <button id="presentation-btn" type="button" v-on:click="seen = !seen">Submit a New Presentation</button>
 
     <v-layout class="mb-3" column align-center v-if="seen">
@@ -275,6 +277,10 @@ export default {
 <style>
 .diary {
   font-family: 'Open Sans', sans-serif;
+}
+.perfect{
+  text-align: center;
+  font-size: 500%;
 }
 #presentation-btn{
   width: 60%;
