@@ -3,6 +3,8 @@
 Do you love public speaking? Me neither. Speak Up aims to help you become a better pubic speaker by analyzing different aspects of speech data, including fillers, clarity, pace, and pauses. The app outputs graphs on the different aspects so that you can track your improvement.
 > Built with: IBM Watson Speech-to-Text, Vue.JS, D3.JS, CSS3, HTML5, Node.JS, Express, Knex.JS, PostgreSQL
 
+Backend part of project can be viewed [here](https://github.com/mollcano/speak-up-backend)
+
 > A Vue.js project
 
 ## Build Setup
