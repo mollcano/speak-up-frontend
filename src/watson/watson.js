@@ -1,7 +1,7 @@
 import { router } from '../router';
 import auth from '../auth/auth';
 
-const API_URL = 'https://speak-up-backend.herokuapp.com/';
+const API_URL = /\/\/localhost/.test(location.href) ? 'http://localhost:3000/' : 'https://speak-up-backend.herokuapp.com/';
 const ADD_AUDIO_URL = API_URL + 'addAudio/';
 const GET_AUDIO_URL = API_URL + 'audio/';
 

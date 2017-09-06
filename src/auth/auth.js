@@ -1,6 +1,6 @@
 import router from '../router/index'
 
-const API_URL = 'https://speak-up-backend.herokuapp.com/'
+const API_URL = /\/\/localhost/.test(location.href) ? 'http://localhost:3000/' : 'https://speak-up-backend.herokuapp.com/'
 const LOGIN_URL = API_URL + 'signin'
 const SIGNUP_URL = API_URL + 'signup'
 
