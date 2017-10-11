@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard">
-    <h2 class="text-xs-center">Welcome Back, {{ first_name }}</h2>
+    <h2 class="text-xs-center">Welcome Back {{ first_name }}</h2>
     <div class="box mb-5">
       <div class="my-pic">
         <img class="user-pic ml-4 mb-3 mt-4" src="../assets/MollyPic.jpg" alt="">
